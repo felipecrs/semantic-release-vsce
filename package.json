@@ -1,7 +1,7 @@
 {
   "name": "semantic-release-meteor",
   "version": "0.0.0-development",
-  "description": "Npm module for releasing meteor packages from CI",
+  "description": "Semantic release plugin for vs code extensions",
   "main": "index.js",
   "repository": "https://github.com/raix/semantic-release-meteor.git",
   "author": "Morten Henriksen <mh@gi2.dk>",
