@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - '8'
+
+cache:
+  directories:
+    - ~/.npm
+    - "node_modules"
+
+notifications:
+  email: false
+
+install:
+  - travis_retry npm install
+
+script:
+  - npm run lint
+
+after_success:
+  #- npm run semantic-release
+
+branches:
+  only:
+    - master
+  except:
+    - /^v\d+\.\d+\.\d+$/
