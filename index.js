@@ -23,7 +23,7 @@ async function publish (pluginConfig, {pkg, nextRelease: {version}, logger}) {
     await verifyVsce(pkg, logger);
     verified = true;
   }
-  await vscePublish(version, logger);
+  await vscePublish(version, pluginConfig.packageVsix, logger);
 }
 
 module.exports = {
