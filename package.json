@@ -1,6 +1,5 @@
 {
-  "name": "semantic-release-meteor",
-  "version": "0.0.0-development",
+  "name": "semantic-release-vsce",
   "description": "Semantic release plugin for vs code extensions",
   "main": "index.js",
   "repository": "https://github.com/raix/semantic-release-meteor.git",
