@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Implement tests\"; exit 0",
     "lint": "eslint ./src",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "engines": {
     "node": ">=8"
