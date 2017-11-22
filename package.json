@@ -1,6 +1,7 @@
 {
   "name": "semantic-release-vsce",
   "description": "Semantic release plugin for vs code extensions",
+  "version": "0.0.0-development",
   "main": "index.js",
   "repository": "https://github.com/raix/semantic-release-meteor.git",
   "author": "Morten Henriksen <mh@gi2.dk>",
@@ -29,6 +30,9 @@
     "vsce": "^1.33.2"
   },
   "devDependencies": {
-    "semantic-release": "^9.1.1"
+    "semantic-release": "^10.0.0"
+  },
+  "release": {
+    "verifyConditions": "@semantic-release/github"
   }
 }
