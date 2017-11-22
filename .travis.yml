@@ -6,7 +6,6 @@ node_js:
 cache:
   directories:
     - ~/.npm
-    - "node_modules"
 
 notifications:
   email: false
@@ -17,8 +16,15 @@ install:
 script:
   - npm run lint
 
-after_success:
-  - npm run semantic-release
+jobs:
+  include:
+    - stage: release
+      script: npm run semantic-release
+
+stages:
+  - test
+  - name: release
+    if: branch = master AND type = push AND fork = false
 
 branches:
   only:
