@@ -42,7 +42,7 @@ NOTE: This package is still experimental - `semantic-release` multi plugins are 
 
 Environment variables:
 ```
-  VSCE_PAT=""
+  VSCE_TOKEN=""
 ```
 
 Example:

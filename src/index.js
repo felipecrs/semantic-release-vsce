@@ -1,7 +1,7 @@
 const {callbackify} = require('util');
 const verify = require('./lib/verify');
-const publish = require('./lib/publish');
-const getLastReleaseMeteor = require('./lib/get-last-release');
+const vscePublish = require('./lib/publish');
+const getLastReleaseGallery = require('./lib/get-last-release');
 
 let verified;
 
@@ -15,7 +15,7 @@ async function getLastRelease (pluginConfig, {pkg, logger}) {
     await verify(pkg, logger);
     verified = true;
   }
-  return getLastReleaseMeteor(pkg, logger);
+  return getLastReleaseGallery(pkg, logger);
 }
 
 async function publish (pluginConfig, {pkg, nextRelease: {version}, logger}) {
@@ -23,7 +23,7 @@ async function publish (pluginConfig, {pkg, nextRelease: {version}, logger}) {
     await verify(pkg, logger);
     verified = true;
   }
-  await publish(version, logger);
+  await vscePublish(version, logger);
 }
 
 module.exports = {
