@@ -27,7 +27,5 @@ stages:
     if: branch = master AND type = push AND fork = false
 
 branches:
-  only:
-    - master
   except:
     - /^v\d+\.\d+\.\d+$/
