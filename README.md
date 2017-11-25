@@ -33,7 +33,7 @@ NOTE: This package is still experimental - `semantic-release` multi plugins are 
     ]
   },
   "devDependencies": {
-    "semantic-release": "^10.0.0"
+    "semantic-release": "^11.0.0"
   }
 }
 ```

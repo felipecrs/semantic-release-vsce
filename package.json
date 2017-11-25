@@ -26,11 +26,15 @@
     "execa": "^0.8.0",
     "fs-extra": "^4.0.2",
     "node-fetch": "^1.7.3",
+    "read-pkg-up": "^3.0.0",
     "semver": "^5.4.1",
     "vsce": "^1.33.2"
   },
   "devDependencies": {
-    "semantic-release": "^10.0.0"
+    "semantic-release": "^11.0.0"
+  },
+  "peerDependencies": {
+    "semantic-release": "^11.0.0"
   },
   "release": {
     "verifyConditions": "@semantic-release/github"
