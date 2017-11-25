@@ -1,33 +1,32 @@
-const {callbackify} = require('util');
 const verifyVsce = require('./lib/verify');
 const vscePublish = require('./lib/publish');
 const getLastReleaseGallery = require('./lib/get-last-release');
 
 let verified;
 
-async function verifyConditions (pluginConfig, {pkg, logger}) {
-  await verifyVsce(pkg, logger);
+async function verifyConditions (pluginConfig, {logger}) {
+  await verifyVsce(logger);
   verified = true;
 }
 
-async function getLastRelease (pluginConfig, {pkg, logger}) {
+async function getLastRelease (pluginConfig, {logger}) {
   if (!verified) {
-    await verifyVsce(pkg, logger);
+    await verifyVsce(logger);
     verified = true;
   }
-  return getLastReleaseGallery(pkg, logger);
+  return getLastReleaseGallery(logger);
 }
 
-async function publish (pluginConfig, {pkg, nextRelease: {version}, logger}) {
+async function publish (pluginConfig, {nextRelease: {version}, logger}) {
   if (!verified) {
-    await verifyVsce(pkg, logger);
+    await verifyVsce(logger);
     verified = true;
   }
   await vscePublish(version, pluginConfig.packageVsix, logger);
 }
 
 module.exports = {
-  verifyConditions: callbackify(verifyConditions),
-  getLastRelease: callbackify(getLastRelease),
-  publish: callbackify(publish)
+  verifyConditions,
+  getLastRelease,
+  publish
 };
