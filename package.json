@@ -34,7 +34,7 @@
     "semantic-release": "^12.2.2"
   },
   "peerDependencies": {
-    "semantic-release": "^11.0.0"
+    "semantic-release": "^12.0.0"
   },
   "release": {
     "verifyConditions": "@semantic-release/github"
