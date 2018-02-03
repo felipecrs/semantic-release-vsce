@@ -13,7 +13,6 @@ Semantic release plugin for Visual Stuio Code extensions
 #### Add config to package.json
 
 Use `semantic-release-vsce` as part of `verifyConditions` and `publish`.
-For `getLastRelease` you should use `@semantic-release/git` (instead of the default npm implementation).
 
 ```json
 {
@@ -21,13 +20,16 @@ For `getLastRelease` you should use `@semantic-release/git` (instead of the defa
     "semantic-release": "semantic-release"
   },
   "release": {
-    "verifyConditions": ["semantic-release-vsce", "@semantic-release/github"],
-    "getLastRelease": "@semantic-release/git",
+    "verifyConditions": [
+      "semantic-release-vsce",
+      "@semantic-release/github"
+    ],
+    "prepare": {
+      "path": "semantic-release-vsce",
+      "packageVsix": "your-extension.vsix"
+    },
     "publish": [
-      {
-        "path": "semantic-release-vsce",
-        "packageVsix": "your-extension.vsix"
-      },
+      "semantic-release-vsce",
       {
         "path": "@semantic-release/github",
         "assets": "your-extension.vsix"
@@ -35,15 +37,20 @@ For `getLastRelease` you should use `@semantic-release/git` (instead of the defa
     ]
   },
   "devDependencies": {
-    "@semantic-release/git": "^2.0.0",
-    "semantic-release": "^12.0.0",
-    "semantic-release-vsce": "^2.0.0",
+    "semantic-release": "^15.0.0",
+    "semantic-release-vsce": "^2.1.0",
   }
 }
 ```
 
 If `packageVsix` is set, will also generate a .vsix file at the set file path after publishing.
 It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug. 
+
+#### Working with older versions
+
+This example is for `semantic-release` v15.  
+Prior to v15, `prepare` was part of `publish` - if you are using v14, you must pass the `packageVsix` option to `publish` instead.  
+Prior to v13, you had to override `getLastRelease` to use `@semantic-release/git` instead of the default `@semantic-release/npm`. This is no longer needed.
 
 #### Travis example
 
