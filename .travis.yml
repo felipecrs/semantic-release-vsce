@@ -18,6 +18,7 @@ script:
 
 jobs:
   include:
+    - stage: test
     - stage: release
       script: npm run semantic-release
 
