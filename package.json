@@ -31,7 +31,7 @@
     "vsce": "^1.33.2"
   },
   "devDependencies": {
-    "semantic-release": "^12.2.2"
+    "semantic-release": "^15.0.0"
   },
   "peerDependencies": {
     "semantic-release": "^12.0.0"
