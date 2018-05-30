@@ -27,7 +27,7 @@ async function publish (pluginConfig, {nextRelease: {version}, logger}) {
 
   if (!prepared) {
     // BC: prior to semantic-release v15 prepare was part of publish
-    await vscePrepare(version, pluginConfig);
+    await vscePrepare(version, pluginConfig, logger);
   }
   await vscePublish(version, logger);
 }
