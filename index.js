@@ -10,7 +10,7 @@ async function verifyConditions (pluginConfig, {logger}) {
   verified = true;
 }
 
-async function prepare (pluginConfig, {nextRelease: {version}}, logger) {
+async function prepare (pluginConfig, {nextRelease: {version}, logger}) {
   if (!verified) {
     await verifyVsce(logger);
     verified = true;
