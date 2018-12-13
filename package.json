@@ -24,7 +24,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "execa": "^0.10.0",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.0",
     "node-fetch": "^2.0.0",
     "read-pkg-up": "^4.0.0",
     "semver": "^5.4.1",
