@@ -21,7 +21,7 @@
     "fs-extra": "^7.0.1",
     "node-fetch": "^2.3.0",
     "read-pkg-up": "^4.0.0",
-    "semver": "^5.4.1",
+    "semver": "^5.6.0",
     "vsce": "^1.57.0"
   },
   "devDependencies": {
