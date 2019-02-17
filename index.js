@@ -5,12 +5,12 @@ const vscePrepare = require('./lib/prepare');
 let verified = false;
 let prepared = false;
 
-async function verifyConditions (pluginConfig, {logger}) {
+async function verifyConditions (pluginConfig, { logger }) {
   await verifyVsce(logger);
   verified = true;
 }
 
-async function prepare (pluginConfig, {nextRelease: {version}, logger}) {
+async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
   if (!verified) {
     await verifyVsce(logger);
     verified = true;
@@ -19,7 +19,7 @@ async function prepare (pluginConfig, {nextRelease: {version}, logger}) {
   prepared = true;
 }
 
-async function publish (pluginConfig, {nextRelease: {version}, logger}) {
+async function publish (pluginConfig, { nextRelease: { version }, logger }) {
   if (!verified) {
     await verifyVsce(logger);
     verified = true;

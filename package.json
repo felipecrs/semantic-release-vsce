@@ -8,36 +8,30 @@
   "license": "MIT",
   "scripts": {
     "test": "echo \"Implement tests\"; exit 0",
-    "lint": "eslint ./src",
+    "lint": "eslint .",
     "semantic-release": "semantic-release"
   },
   "engines": {
     "node": ">=8"
   },
   "dependencies": {
-    "@semantic-release/error": "^2.1.0",
+    "@semantic-release/error": "^2.2.0",
     "commander": "^2.11.0",
-    "eslint": "^4.11.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.2.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
     "execa": "^0.10.0",
     "fs-extra": "^6.0.0",
-    "node-fetch": "^2.0.0",
+    "node-fetch": "^2.3.0",
     "read-pkg-up": "^4.0.0",
     "semver": "^5.4.1",
-    "vsce": "^1.33.2"
+    "vsce": "^1.57.0"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "eslint": "^5.14.0",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^7.0.0",
-    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "semantic-release": "^15.4.1"
+    "semantic-release": "^15.13.4"
   },
   "peerDependencies": {
     "semantic-release": ">=12.0.0 <16.0.0"
