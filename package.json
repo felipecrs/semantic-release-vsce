@@ -40,7 +40,9 @@
     "semantic-release": ">=12.0.0 <16.0.0"
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "husky": {
     "hooks": {
