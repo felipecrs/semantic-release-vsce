@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@semantic-release/error": "^2.2.0",
-    "commander": "^2.11.0",
-    "execa": "^0.10.0",
-    "fs-extra": "^6.0.0",
+    "commander": "^2.19.0",
+    "execa": "^1.0.0",
+    "fs-extra": "^7.0.1",
     "node-fetch": "^2.3.0",
     "read-pkg-up": "^4.0.0",
     "semver": "^5.4.1",
