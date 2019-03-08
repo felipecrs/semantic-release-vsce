@@ -6,7 +6,7 @@ let verified = false;
 let prepared = false;
 
 async function verifyConditions (pluginConfig, { logger }) {
-  await verifyVsce(logger);
+  await verifyVsce(pluginConfig, logger);
   verified = true;
 }
 
@@ -15,7 +15,7 @@ async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
     await verifyVsce(logger);
     verified = true;
   }
-  await vscePrepare(version, pluginConfig.packageVsix, logger);
+  await vscePrepare(version, pluginConfig, logger);
   prepared = true;
 }
 
@@ -27,9 +27,9 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
 
   if (!prepared) {
     // BC: prior to semantic-release v15 prepare was part of publish
-    await vscePrepare(version, pluginConfig.packageVsix, logger);
+    await vscePrepare(version, pluginConfig, logger);
   }
-  await vscePublish(version, logger);
+  await vscePublish(version, pluginConfig, logger);
 }
 
 module.exports = {
