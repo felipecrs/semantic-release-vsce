@@ -29,7 +29,7 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
     // BC: prior to semantic-release v15 prepare was part of publish
     await vscePrepare(version, pluginConfig.packageVsix, logger);
   }
-  await vscePublish(version, logger);
+  return await vscePublish(version, logger);
 }
 
 module.exports = {
