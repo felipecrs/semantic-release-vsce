@@ -17,7 +17,7 @@
   "dependencies": {
     "@semantic-release/error": "^2.2.0",
     "commander": "^2.19.0",
-    "detect-indent": "^5.0.0",
+    "detect-indent": "^6.0.0",
     "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
     "node-fetch": "^2.3.0",
