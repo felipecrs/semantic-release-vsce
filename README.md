@@ -37,7 +37,7 @@ Use `semantic-release-vsce` as part of `verifyConditions` and `publish`.
     ]
   },
   "devDependencies": {
-    "semantic-release": "^15.0.0",
+    "semantic-release": "^17.0.0",
     "semantic-release-vsce": "^2.1.0",
   }
 }
@@ -77,6 +77,6 @@ jobs:
   include:
     - stage: release
       language: node_js
-      node_js: '8'
+      node_js: '10.18'
       script: npm run semantic-release
 ```
