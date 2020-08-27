@@ -26,13 +26,13 @@ Use `semantic-release-vsce` as part of `verifyConditions` and `publish`.
     ],
     "prepare": {
       "path": "semantic-release-vsce",
-      "packageVsix": "your-extension.vsix"
+      "packageVsix": true
     },
     "publish": [
       "semantic-release-vsce",
       {
         "path": "@semantic-release/github",
-        "assets": "your-extension.vsix"
+        "assets": "*.vsix"
       }
     ]
   },
@@ -43,7 +43,7 @@ Use `semantic-release-vsce` as part of `verifyConditions` and `publish`.
 }
 ```
 
-If `packageVsix` is set, will also generate a .vsix file at the set file path after publishing.
+If `packageVsix` is set, will also generate a .vsix file at the set file path after publishing. If is a string, it will be used as value for `--out` of `vsce package`.
 It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug. 
 
 If `yarn` is set to `true`, will use `--yarn`option for `vsce package` and `vsce publish`.
