@@ -12,7 +12,8 @@ const semanticReleasePayload = {
 };
 
 const pluginConfig = {
-  packageVsix: 'test.vsix'
+  packageVsix: 'test.vsix',
+  yarn: undefined
 };
 
 test.beforeEach(t => {
@@ -57,6 +58,7 @@ test('prepare and unverified', async t => {
   t.deepEqual(vscePrepareStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     pluginConfig.packageVsix,
+    pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
 });
@@ -76,6 +78,7 @@ test('prepare and verified', async t => {
   t.deepEqual(vscePrepareStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     pluginConfig.packageVsix,
+    pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
 });
@@ -94,6 +97,7 @@ test('publish that is unverified and unprepared', async t => {
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
 });
@@ -113,6 +117,7 @@ test('publish that is verified but unprepared', async t => {
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
 });
@@ -133,6 +138,7 @@ test('publish that is already verified & prepared', async t => {
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
 });

@@ -30,7 +30,7 @@ test('publish', async t => {
     }
   });
 
-  const result = await publish('1.0.0', logger);
+  const result = await publish('1.0.0', undefined, logger);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
