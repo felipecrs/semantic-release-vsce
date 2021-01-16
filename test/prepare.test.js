@@ -31,6 +31,20 @@ test('packageVsix is not specified', async t => {
   t.true(execaStub.notCalled);
 });
 
+test('packageVsix is not specified but yarn is true', async t => {
+  const { updatePackageVersionStub, execaStub } = t.context.stubs;
+  const prepare = proxyquire('../lib/prepare', {
+    execa: execaStub,
+    './update-package-version': updatePackageVersionStub
+  });
+
+  const yarn = true;
+  await prepare('1.0.0', undefined, yarn, logger);
+
+  t.true(updatePackageVersionStub.calledOnce);
+  t.true(execaStub.notCalled);
+});
+
 test('packageVsix is a string', async t => {
   const { updatePackageVersionStub, execaStub } = t.context.stubs;
   const prepare = proxyquire('../lib/prepare', {
@@ -43,4 +57,33 @@ test('packageVsix is a string', async t => {
 
   t.true(updatePackageVersionStub.calledOnce);
   t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', '--out', packageVsix], { stdio: 'inherit' }]);
+});
+
+test('packageVsix is true', async t => {
+  const { updatePackageVersionStub, execaStub } = t.context.stubs;
+  const prepare = proxyquire('../lib/prepare', {
+    execa: execaStub,
+    './update-package-version': updatePackageVersionStub
+  });
+
+  const packageVsix = true;
+  await prepare('1.0.0', packageVsix, undefined, logger);
+
+  t.true(updatePackageVersionStub.calledOnce);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package'], { stdio: 'inherit' }]);
+});
+
+test('packageVsix is true and yarn is true', async t => {
+  const { updatePackageVersionStub, execaStub } = t.context.stubs;
+  const prepare = proxyquire('../lib/prepare', {
+    execa: execaStub,
+    './update-package-version': updatePackageVersionStub
+  });
+
+  const packageVsix = true;
+  const yarn = true;
+  await prepare('1.0.0', packageVsix, yarn, logger);
+
+  t.true(updatePackageVersionStub.calledOnce);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', '--yarn'], { stdio: 'inherit' }]);
 });
