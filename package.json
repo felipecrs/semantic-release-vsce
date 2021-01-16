@@ -19,7 +19,7 @@
     "@semantic-release/error": "^2.2.0",
     "detect-indent": "^6.0.0",
     "execa": "^5.0.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.1",
     "node-fetch": "^2.6.0",
     "read-pkg-up": "^7.0.1",
     "semver": "^7.1.3"
