@@ -7,9 +7,10 @@
   "author": "Morten Henriksen <mh@gi2.dk>",
   "license": "MIT",
   "scripts": {
-    "test": "nyc ava -v",
     "lint": "eslint .",
-    "semantic-release": "semantic-release"
+    "test": "nyc ava",
+    "posttest": "npm run lint",
+    "release": "semantic-release"
   },
   "engines": {
     "node": ">=10.18"
