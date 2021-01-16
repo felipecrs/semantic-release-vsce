@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/semantic-release-vsce.svg)](https://www.npmjs.com/package/semantic-release-vsce)
 [![downloads](https://img.shields.io/npm/dt/semantic-release-vsce.svg)](https://www.npmjs.com/package/semantic-release-vsce)
-[![build](https://travis-ci.org/raix/semantic-release-vsce.svg?branch=master)](https://travis-ci.org/raix/semantic-release-vsce)
+[![ci](https://github.com/raix/semantic-release-vsce/workflows/ci/badge.svg)](https://github.com/raix/semantic-release-vsce/actions?query=workflow%3Aci)
 [![dependencies](https://david-dm.org/raix/semantic-release-vsce/status.svg)](https://david-dm.org/raix/semantic-release-vsce)
 [![peerDependencies](https://david-dm.org/raix/semantic-release-vsce/peer-status.svg)](https://david-dm.org/raix/semantic-release-vsce?type=peer)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
