@@ -44,15 +44,9 @@
   "peerDependencies": {
     "semantic-release": ">=16.0.0"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+  "volta": {
+    "node": "14.15.4",
+    "npm": "7.4.2"
   },
   "ava": {
     "files": [
@@ -68,5 +62,15 @@
     "exclude": [
       "lib/die.js"
     ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
