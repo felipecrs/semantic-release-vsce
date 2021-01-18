@@ -20,7 +20,8 @@
     "detect-indent": "^6.0.0",
     "execa": "^5.0.0",
     "fs-extra": "^9.0.1",
-    "read-pkg-up": "^7.0.1"
+    "read-pkg-up": "^7.0.1",
+    "vsce": "^1.73.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -40,8 +41,7 @@
     "sinon": "^9.0.2"
   },
   "peerDependencies": {
-    "semantic-release": ">=16.0.0",
-    "vsce": ">=1.73.0 < 2"
+    "semantic-release": ">=16.0.0"
   },
   "volta": {
     "node": "14.15.4",
