@@ -9,7 +9,7 @@ const logger = {
 
 test('package.json is found', async t => {
   const verify = proxyquire('../lib/verify', {
-    './set-auth': sinon.stub().resolves(),
+    './verify-auth': sinon.stub().resolves(),
     './verify-pkg': sinon.stub(),
     'read-pkg-up': sinon.stub().returns({ packageJson: {} })
   });
@@ -19,7 +19,7 @@ test('package.json is found', async t => {
 
 test('package.json is not found', async t => {
   const verify = proxyquire('../lib/verify', {
-    './set-auth': sinon.stub().resolves(),
+    './verify-auth': sinon.stub().resolves(),
     './verify-pkg': sinon.stub(),
     'read-pkg-up': sinon.stub().returns({ })
   });

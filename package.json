@@ -61,7 +61,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^9.0.1",
     "read-pkg-up": "^7.0.1",
-    "vsce": "^1.73.0"
+    "vsce": "^1.85.1"
   },
   "peerDependencies": {
     "semantic-release": ">=16.0.0"
