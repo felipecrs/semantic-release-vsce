@@ -55,7 +55,7 @@ Prior to v13, you had to override `getLastRelease` to use `@semantic-release/git
 
 #### Travis example
 
-Secret environment variables: `VSCE_TOKEN`
+Secret environment variables: `VSCE_PAT`
 
 Example:
 
