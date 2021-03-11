@@ -38,7 +38,7 @@ test('publish', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--pat', token], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish'], { stdio: 'inherit' }]);
 });
 
 test('publish when yarn is true', async t => {
@@ -64,7 +64,7 @@ test('publish when yarn is true', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--pat', token, '--yarn'], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--yarn'], { stdio: 'inherit' }]);
 });
 
 test('publish with VSCE_PAT and VSCE_TOKEN should prefer VSCE_PAT', async t => {

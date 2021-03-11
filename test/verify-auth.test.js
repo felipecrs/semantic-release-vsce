@@ -18,6 +18,7 @@ test('VSCE_TOKEN is set', async t => {
 
 test('VSCE_TOKEN is not set', async t => {
   delete process.env.VSCE_TOKEN;
+  delete process.env.VSCE_PAT;
 
   await t.throwsAsync(() => verifyAuth(logger), { instanceOf: SemanticReleaseError, code: 'ENOVSCEPAT' });
 });
