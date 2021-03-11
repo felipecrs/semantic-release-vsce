@@ -38,7 +38,7 @@ test('publish', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--pat', token], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish'], { stdio: 'inherit' }]);
 });
 
 test('publish when yarn is true', async t => {
@@ -64,5 +64,31 @@ test('publish when yarn is true', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--pat', token, '--yarn'], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--yarn'], { stdio: 'inherit' }]);
+});
+
+test('publish with VSCE_PAT and VSCE_TOKEN should prefer VSCE_PAT', async t => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name
+      })
+    }
+  });
+
+  const token = 'abc123';
+  process.env.VSCE_TOKEN = token;
+  process.env.VSCE_PAT = token;
+  const result = await publish('1.0.0', undefined, logger);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
+  });
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish'], { stdio: 'inherit' }]);
 });
