@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v1.7.0
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: volta-cli/action@v1
+      - uses: volta-cli/action@v1.7.0
       - run: npm ci
       - run: npm run release
         env:
