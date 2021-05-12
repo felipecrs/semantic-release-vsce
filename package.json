@@ -21,12 +21,8 @@
     "lint": "eslint .",
     "release": "semantic-release",
     "test": "nyc ava",
-    "posttest": "npm run lint"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "posttest": "npm run lint",
+    "prepare": "husky install"
   },
   "ava": {
     "files": [
