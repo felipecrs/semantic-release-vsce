@@ -52,8 +52,8 @@
     "preset": "conventionalcommits"
   },
   "volta": {
-    "node": "14.15.4",
-    "npm": "7.4.2"
+    "node": "14.17.0",
+    "npm": "7.12.1"
   },
   "dependencies": {
     "@semantic-release/error": "^2.2.0",
