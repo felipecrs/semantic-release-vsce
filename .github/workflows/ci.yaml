@@ -20,7 +20,7 @@ jobs:
           - 14
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: volta-cli/action@v1
         with:
           node-version: ${{ matrix.node-version }}
@@ -33,7 +33,7 @@ jobs:
     needs: test
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: volta-cli/action@v1
       - run: npm ci
       - run: npm run release
