@@ -55,7 +55,6 @@
     "@semantic-release/error": "^2.2.0",
     "execa": "^5.0.0",
     "fs-extra": "^10.0.0",
-    "read-pkg-up": "^7.0.1",
     "vsce": "^1.85.1"
   },
   "peerDependencies": {
