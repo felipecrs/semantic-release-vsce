@@ -97,6 +97,7 @@ test('publish that is unverified and unprepared', async t => {
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    undefined,
     pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
@@ -117,6 +118,7 @@ test('publish that is verified but unprepared', async t => {
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    undefined,
     pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);
@@ -131,13 +133,14 @@ test('publish that is already verified & prepared', async t => {
   });
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
-  await prepare(pluginConfig, semanticReleasePayload);
+  const packagePath = await prepare(pluginConfig, semanticReleasePayload);
   await publish(pluginConfig, semanticReleasePayload);
 
   t.true(verifyVsceStub.calledOnce);
   t.true(vscePrepareStub.calledOnce);
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
+    packagePath,
     pluginConfig.yarn,
     semanticReleasePayload.logger
   ]);

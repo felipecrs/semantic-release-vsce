@@ -33,13 +33,40 @@ test('publish', async t => {
   const version = '1.0.0';
   const token = 'abc123';
   process.env.VSCE_TOKEN = token;
-  const result = await publish(version, undefined, logger);
+  const result = await publish(version, undefined, undefined, logger);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
   t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit' }]);
+});
+
+test('publish with packagePath', async t => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name
+      })
+    }
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  const token = 'abc123';
+  process.env.VSCE_TOKEN = token;
+  const result = await publish(version, packagePath, undefined, logger);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
+  });
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit' }]);
 });
 
 test('publish when yarn is true', async t => {
@@ -60,7 +87,7 @@ test('publish when yarn is true', async t => {
   const token = 'abc123';
   process.env.VSCE_TOKEN = token;
   const yarn = true;
-  const result = await publish(version, yarn, logger);
+  const result = await publish(version, undefined, yarn, logger);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
@@ -87,7 +114,7 @@ test('publish with VSCE_PAT and VSCE_TOKEN should prefer VSCE_PAT', async t => {
   const token = 'abc123';
   process.env.VSCE_TOKEN = token;
   process.env.VSCE_PAT = token;
-  const result = await publish(version, undefined, logger);
+  const result = await publish(version, undefined, undefined, logger);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
