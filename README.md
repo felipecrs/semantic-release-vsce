@@ -47,6 +47,16 @@ It is recommended to upload this to your GitHub release page so your users can e
 
 If `yarn` is set to `true`, will use `--yarn`option for `vsce package` and `vsce publish`.
 
+#### Publishing to OpenVSX
+
+Publishing extensions to OpenVSX using this plugin is easy:
+
+1. Get a valid personal access token with the correct privileges to the publisher namespace in OpenVSX. In order to get the personal access token, check this [page](https://github.com/eclipse/openvsx/wiki).
+
+2. Configure the `OVSX_PAT` environment variable in your CI with the token that you created.
+
+3. Enjoy! The plugin will automatically detect the environment variable and it will publish to OpenVSX, no additional configuration is needed.
+
 #### Working with older versions
 
 This example is for `semantic-release` v15.  
