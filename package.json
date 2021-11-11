@@ -56,7 +56,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^10.0.0",
     "ovsx": "^0.2.0",
-    "vsce": "^1.96.1"
+    "vsce": "^2.3.0"
   },
   "peerDependencies": {
     "semantic-release": ">=16.0.0"
