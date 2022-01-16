@@ -1,17 +1,17 @@
-const verifyVsce = require('./lib/verify');
-const vscePublish = require('./lib/publish');
-const vscePrepare = require('./lib/prepare');
+import verifyVsce from './lib/verify';
+import vscePublish from './lib/publish';
+import vscePrepare from './lib/prepare';
 
 let verified = false;
 let prepared = false;
 let packagePath;
 
-async function verifyConditions (pluginConfig, { logger }) {
+export async function verifyConditions (pluginConfig, { logger }) {
   await verifyVsce(logger);
   verified = true;
 }
 
-async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
+export async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
   if (!verified) {
     await verifyVsce(logger);
     verified = true;
@@ -20,7 +20,7 @@ async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
   prepared = true;
 }
 
-async function publish (pluginConfig, { nextRelease: { version }, logger }) {
+export async function publish (pluginConfig, { nextRelease: { version }, logger }) {
   if (!verified) {
     await verifyVsce(logger);
     verified = true;
@@ -32,9 +32,3 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
   }
   return vscePublish(version, packagePath, pluginConfig.yarn, logger);
 }
-
-module.exports = {
-  verifyConditions,
-  prepare,
-  publish
-};

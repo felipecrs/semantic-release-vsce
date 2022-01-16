@@ -1,14 +1,14 @@
-const sinon = require('sinon');
-const test = require('ava');
-const proxyquire = require('proxyquire');
+import { fake, stub } from 'sinon';
+import test from 'ava';
+import rewiremock from './utils/rewiremock';
 
 const logger = {
-  log: sinon.fake()
+  log: fake()
 };
 
 test.beforeEach(t => {
   t.context.stubs = {
-    execaStub: sinon.stub()
+    execaStub: stub()
   };
 });
 
@@ -18,7 +18,7 @@ test.afterEach(t => {
 
 test('packageVsix is not specified', async t => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub
   });
 
@@ -30,7 +30,7 @@ test('packageVsix is not specified', async t => {
 
 test('packageVsix is not specified but yarn is true', async t => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub
   });
 
@@ -43,7 +43,7 @@ test('packageVsix is not specified but yarn is true', async t => {
 
 test('packageVsix is a string', async t => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub
   });
 
@@ -60,10 +60,10 @@ test('packageVsix is true', async t => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name
       })
     }
@@ -83,10 +83,10 @@ test('packageVsix is true and yarn is true', async t => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name
       })
     }
@@ -107,16 +107,16 @@ test('packageVsix is not set but OVSX_PAT is', async t => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
+  const prepare = rewiremock('../lib/prepare', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name
       })
     }
   });
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: 'abc123'
   });
 

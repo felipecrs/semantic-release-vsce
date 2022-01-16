@@ -1,13 +1,13 @@
-const test = require('ava');
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
+import test from 'ava';
+import { fake, stub } from 'sinon';
+import rewiremock from './utils/rewiremock';
 
 const semanticReleasePayload = {
   nextRelease: {
     version: '1.0.0'
   },
   logger: {
-    log: sinon.fake()
+    log: fake()
   }
 };
 
@@ -18,9 +18,9 @@ const pluginConfig = {
 
 test.beforeEach(t => {
   t.context.stubs = {
-    verifyVsceStub: sinon.stub().resolves(),
-    vscePublishStub: sinon.stub().resolves(),
-    vscePrepareStub: sinon.stub().resolves()
+    verifyVsceStub: stub().resolves(),
+    vscePublishStub: stub().resolves(),
+    vscePrepareStub: stub().resolves()
   };
 });
 
@@ -32,7 +32,7 @@ test.afterEach(t => {
 
 test('verifyConditions', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { verifyConditions } = proxyquire('../index.js', {
+  const { verifyConditions } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub
@@ -45,7 +45,7 @@ test('verifyConditions', async t => {
 
 test('prepare and unverified', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare } = proxyquire('../index.js', {
+  const { prepare } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub,
@@ -65,7 +65,7 @@ test('prepare and unverified', async t => {
 
 test('prepare and verified', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, verifyConditions } = proxyquire('../index.js', {
+  const { prepare, verifyConditions } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub
@@ -85,7 +85,7 @@ test('prepare and verified', async t => {
 
 test('publish that is unverified and unprepared', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = proxyquire('../index.js', {
+  const { publish } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub
@@ -105,7 +105,7 @@ test('publish that is unverified and unprepared', async t => {
 
 test('publish that is verified but unprepared', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish, verifyConditions } = proxyquire('../index.js', {
+  const { publish, verifyConditions } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub
@@ -126,7 +126,7 @@ test('publish that is verified but unprepared', async t => {
 
 test('publish that is already verified & prepared', async t => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
+  const { prepare, publish, verifyConditions } = rewiremock('../index', {
     './lib/verify': verifyVsceStub,
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub

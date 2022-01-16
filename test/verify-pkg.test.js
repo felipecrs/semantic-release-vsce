@@ -1,18 +1,18 @@
-const sinon = require('sinon');
-const test = require('ava');
-const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
+import { stub } from 'sinon';
+import test from 'ava';
+import rewiremock from './utils/rewiremock';
+import SemanticReleaseError from '@semantic-release/error';
 
 test('package.json is found', async t => {
   const name = 'test';
   const publisher = 'tester';
 
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(true)
+      existsSync: stub().returns(true)
     },
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name,
         publisher
       })
@@ -26,12 +26,12 @@ test('package.json is not found', async t => {
   const name = 'test';
   const publisher = 'tester';
 
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(false)
+      existsSync: stub().returns(false)
     },
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name,
         publisher
       })
@@ -44,12 +44,12 @@ test('package.json is not found', async t => {
 test('package is valid', async t => {
   const name = 'test';
   const publisher = 'tester';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(true)
+      existsSync: stub().returns(true)
     },
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -60,12 +60,12 @@ test('package is valid', async t => {
 });
 
 test('package is invalid', async t => {
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(true)
+      existsSync: stub().returns(true)
     },
     'fs-extra': {
-      readJson: sinon.stub().rejects()
+      readJson: stub().rejects()
     }
   });
 
@@ -74,12 +74,12 @@ test('package is invalid', async t => {
 
 test('package is missing name', async t => {
   const publisher = 'tester';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(true)
+      existsSync: stub().returns(true)
     },
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher
       })
     }
@@ -90,12 +90,12 @@ test('package is missing name', async t => {
 
 test('package is missing publisher', async t => {
   const name = 'test';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
+  const verifyPkg = rewiremock('../lib/verify-pkg', {
     fs: {
-      existsSync: sinon.stub().returns(true)
+      existsSync: stub().returns(true)
     },
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         name
       })
     }

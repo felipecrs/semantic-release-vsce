@@ -1,14 +1,14 @@
-const sinon = require('sinon');
-const test = require('ava');
-const proxyquire = require('proxyquire');
+import { fake, stub } from 'sinon';
+import test from 'ava';
+import rewiremock from './utils/rewiremock';
 
 const logger = {
-  log: sinon.fake()
+  log: fake()
 };
 
 test.beforeEach(t => {
   t.context.stubs = {
-    execaStub: sinon.stub()
+    execaStub: stub()
   };
 });
 
@@ -20,10 +20,10 @@ test('publish', async t => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
+  const publish = rewiremock('../lib/publish', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -32,7 +32,7 @@ test('publish', async t => {
 
   const version = '1.0.0';
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: token
   });
   const result = await publish(version, undefined, undefined, logger);
@@ -48,10 +48,10 @@ test('publish with packagePath', async t => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
+  const publish = rewiremock('../lib/publish', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -61,7 +61,7 @@ test('publish with packagePath', async t => {
   const version = '1.0.0';
   const packagePath = 'test.vsix';
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: token
   });
   const result = await publish(version, packagePath, undefined, logger);
@@ -77,10 +77,10 @@ test('publish when yarn is true', async t => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
+  const publish = rewiremock('../lib/publish', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -89,7 +89,7 @@ test('publish when yarn is true', async t => {
 
   const version = '1.0.0';
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: token
   });
   const yarn = true;
@@ -106,10 +106,10 @@ test('publish with VSCE_PAT and VSCE_TOKEN should prefer VSCE_PAT', async t => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
+  const publish = rewiremock('../lib/publish', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -118,7 +118,7 @@ test('publish with VSCE_PAT and VSCE_TOKEN should prefer VSCE_PAT', async t => {
 
   const version = '1.0.0';
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: token,
     VSCE_TOKEN: token
   });
@@ -135,10 +135,10 @@ test('publish to OpenVSX', async t => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
+  const publish = rewiremock('../lib/publish', {
     execa: execaStub,
     'fs-extra': {
-      readJson: sinon.stub().returns({
+      readJson: stub().returns({
         publisher,
         name
       })
@@ -148,7 +148,7 @@ test('publish to OpenVSX', async t => {
   const version = '1.0.0';
   const packagePath = 'test.vsix';
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: token,
     VSCE_TOKEN: token
   });
