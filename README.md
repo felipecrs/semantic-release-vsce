@@ -45,8 +45,6 @@ Use `semantic-release-vsce` as part of `verifyConditions` and `publish`.
 If `packageVsix` is set, will also generate a .vsix file at the set file path after publishing. If is a string, it will be used as value for `--out` of `vsce package`.
 It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug. 
 
-If `yarn` is set to `true`, will use `--yarn`option for `vsce package` and `vsce publish`.
-
 #### Publishing to OpenVSX
 
 Publishing extensions to OpenVSX using this plugin is easy:
