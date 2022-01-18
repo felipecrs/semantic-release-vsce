@@ -16,7 +16,7 @@ async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
     await verifyVsce(logger);
     verified = true;
   }
-  packagePath = await vscePrepare(version, pluginConfig.packageVsix, pluginConfig.yarn, logger);
+  packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
   prepared = true;
 }
 
@@ -28,9 +28,9 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
 
   if (!prepared) {
     // BC: prior to semantic-release v15 prepare was part of publish
-    packagePath = await vscePrepare(version, pluginConfig.packageVsix, pluginConfig.yarn, logger);
+    packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
   }
-  return vscePublish(version, packagePath, pluginConfig.yarn, logger);
+  return vscePublish(version, packagePath, logger);
 }
 
 module.exports = {
