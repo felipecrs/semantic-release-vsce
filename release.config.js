@@ -1,66 +1,66 @@
 module.exports = {
   plugins: [
     [
-      "@semantic-release/commit-analyzer",
+      '@semantic-release/commit-analyzer',
       {
         releaseRules: [
           {
-            type: "perf",
-            release: "patch",
+            type: 'perf',
+            release: 'patch'
           },
           {
-            type: "refactor",
-            release: "patch",
+            type: 'refactor',
+            release: 'patch'
           },
           {
-            type: "build",
-            scope: "deps",
-            release: "patch",
-          },
-        ],
-      },
+            type: 'build',
+            scope: 'deps',
+            release: 'patch'
+          }
+        ]
+      }
     ],
     [
-      "@semantic-release/release-notes-generator",
+      '@semantic-release/release-notes-generator',
       {
         presetConfig: {
           types: [
             {
-              type: "feat",
-              section: "Features",
+              type: 'feat',
+              section: 'Features'
             },
             {
-              type: "fix",
-              section: "Bug Fixes",
+              type: 'fix',
+              section: 'Bug Fixes'
             },
             {
-              type: "perf",
-              section: "Performance Improvements",
+              type: 'perf',
+              section: 'Performance Improvements'
             },
             {
-              type: "revert",
-              section: "Reverts",
+              type: 'revert',
+              section: 'Reverts'
             },
             {
-              type: "refactor",
-              section: "Code Refactoring",
+              type: 'refactor',
+              section: 'Code Refactoring'
             },
             {
-              type: "build",
-              scope: "deps",
-              section: "Dependencies",
-            },
-          ],
-        },
-      },
+              type: 'build',
+              scope: 'deps',
+              section: 'Dependencies'
+            }
+          ]
+        }
+      }
     ],
-    "@semantic-release/npm",
+    '@semantic-release/npm',
     [
-      "@semantic-release/github",
+      '@semantic-release/github',
       {
-        addReleases: "bottom",
-      },
-    ],
+        addReleases: 'bottom'
+      }
+    ]
   ],
-  preset: "conventionalcommits",
+  preset: 'conventionalcommits'
 };
