@@ -44,12 +44,9 @@
       "lib/**/*.js"
     ]
   },
-  "release": {
-    "preset": "conventionalcommits"
-  },
   "volta": {
     "node": "16.13.2",
-    "npm": "8.3.2"
+    "npm": "8.4.0"
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
