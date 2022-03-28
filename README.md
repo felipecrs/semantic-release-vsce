@@ -55,7 +55,7 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
 
 | Option | Type | Description |
 | -------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
-| `packageVsix` | `boolean | string`  | If set to true, plugin will generate a .vsix file at the set file path after publishing. If is a string, it will be used as value for `--out` of `vsce package`. <br /> It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug.|
+| `packageVsix` | `boolean or string`  | If set to true, plugin will generate a .vsix file at the set file path after publishing. If is a string, it will be used as value for `--out` of `vsce package`. <br /> It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug.|
 
 ### Environment Variables
 
