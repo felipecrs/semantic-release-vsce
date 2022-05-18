@@ -59,7 +59,7 @@
     "semantic-release": ">=18"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.0.2",
+    "@commitlint/cli": "^17.0.0",
     "@commitlint/config-conventional": "^16.0.0",
     "ava": "^4.0.1",
     "conventional-changelog-conventionalcommits": "^4.2.1",
