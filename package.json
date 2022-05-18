@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.0",
-    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/config-conventional": "^17.0.0",
     "ava": "^4.0.1",
     "conventional-changelog-conventionalcommits": "^4.2.1",
     "eslint": "^8.7.0",
