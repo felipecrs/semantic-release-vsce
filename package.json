@@ -45,8 +45,8 @@
     ]
   },
   "volta": {
-    "node": "16.13.2",
-    "npm": "8.4.0"
+    "node": "16.15.1",
+    "npm": "8.12.1"
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
@@ -64,9 +64,9 @@
     "ava": "^4.0.1",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "eslint": "^8.7.0",
-    "eslint-config-standard": "^17.0.0-0",
+    "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-n": "^14.0.0",
+    "eslint-plugin-n": "^15.2.1",
     "eslint-plugin-promise": "^6.0.0",
     "husky": "^8.0.1",
     "nyc": "^15.1.0",
