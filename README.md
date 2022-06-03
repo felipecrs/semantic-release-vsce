@@ -9,22 +9,22 @@
 [![peerDependencies](https://david-dm.org/felipecrs/semantic-release-vsce/peer-status.svg)](https://david-dm.org/felipecrs/semantic-release-vsce?type=peer)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-| Step               | Description                                                                                                                                                                                                                              |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `verify` | Verify the presence and the validity of the authentication (set via [environment variables](#environment-variables)) and the `package.json`|
-| `prepare` | Generate the `.vsix` file using vsce, this can be be controlled by providing `packageVsix` in config. <br/> *Note:- If the `OVSX_PAT` env variable is set, this step will still run*|
-| `publish` | Publish the extension|
+| Step      | Description                                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`  | Verify the presence and the validity of the authentication (set via [environment variables](#environment-variables)) and the `package.json`                                                 |
+| `prepare` | Generate the `.vsix` file using vsce, this can be be controlled by providing `packageVsix` in config. <br/> _Note: If the `OVSX_PAT` environment variable is set, this step will still run_ |
+| `publish` | Publish the extension                                                                                                                                                                       |
 
 ## Install
 
-```bash
+```console
 npm install --save-dev semantic-release-vsce
 ```
 
-OR
+or
 
-```bash
-yarn add -D semantic-release-vsce
+```console
+yarn add --dev semantic-release-vsce
 ```
 
 ## Usage
@@ -36,33 +36,39 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    ["semantic-release-vsce", {
+    [
+      "semantic-release-vsce",
+      {
         "packageVsix": true
-    }],
-    ["@semantic-release/github", {
-      "assets": [
-        {
-          "path": "*.vsix",
-          "label": "Extension File"
-        },
-      ]
-    }],
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "*.vsix",
+            "label": "Extension File"
+          }
+        ]
+      }
+    ]
   ]
 }
 ```
 
 ## Configuration
 
-| Option | Type | Description |
-| -------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
-| `packageVsix` | `boolean or string`  | If set to true, plugin will generate a .vsix file at the set file path after publishing. If is a string, it will be used as value for `--out` of `vsce package`. <br /> It is recommended to upload this to your GitHub release page so your users can easily rollback to an earlier version if a version ever introduces a bad bug.|
+| Option        | Type                  | Description                                                                                                                        |
+| ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `packageVsix` | `boolean` or `string` | If set to `true`, the plugin will generate a `.vsix` file. If is a string, it will be used as value for `--out` of `vsce package`. |
 
 ### Environment Variables
 
-| Variable                                           | Description                                               |
-| -------------------------------------------------- | --------------------------------------------------------- |
-| `VSCE_PAT`| **Required.** The personal access token to publish the extension of VS Code Marketplace|
-| `OVSX_PAT`| *Optional* The personal access token to push to OpenVSX |
+| Variable   | Description                                                                             |
+| ---------- | --------------------------------------------------------------------------------------- |
+| `VSCE_PAT` | **Required**. The personal access token to publish the extension of VS Code Marketplace |
+| `OVSX_PAT` | _Optional_. The personal access token to push to OpenVSX                                |
 
 ### Publishing to OpenVSX
 
@@ -72,64 +78,29 @@ Publishing extensions to OpenVSX using this plugin is easy:
 
 2. Configure the `OVSX_PAT` environment variable in your CI with the token that you created.
 
-3. Enjoy! The plugin will automatically detect the environment variable and it will publish to OpenVSX, no additional configuration is needed.
-
-### Working with older versions
-
-This example is for `semantic-release` v15.  
-Prior to v15, `prepare` was part of `publish` - if you are using v14, you must pass the `packageVsix` option to `publish` instead.  
-Prior to v13, you had to override `getLastRelease` to use `@semantic-release/git` instead of the default `@semantic-release/npm`. This is no longer needed.
-
-### Travis example
-
-Secret environment variables: `VSCE_PAT`
-
-Example:
-
-```yaml
-# .travis.yml
-
-cache:
-  directories:
-    - ~/.npm
-
-script:
-  - npm test
-
-stages:
-  - test
-  - name: release
-    if: branch = master AND type = push AND fork = false
-
-jobs:
-  include:
-    - stage: release
-      language: node_js
-      node_js: '10.18'
-      script: npm run semantic-release
-```
+3. The plugin will automatically detect the environment variable and it will publish to OpenVSX, no additional configuration is needed. Enjoy!
 
 ### Github Actions Example
 
 ```yaml
-name: CD:- Release Extension
+name: release
 
 on:
   push:
     branches: [master]
 
 jobs:
-  Release:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
       - name: Install Node Dependencies
         run: npm ci
-      - name: Generate Semantic Release
-        run: yarn release
+      - name: Release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
