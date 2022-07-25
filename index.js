@@ -7,7 +7,7 @@ let prepared = false;
 let packagePath;
 
 async function verifyConditions (pluginConfig, { logger }) {
-  await verifyVsce(logger);
+  await verifyVsce(logger, pluginConfig);
   verified = true;
 }
 
