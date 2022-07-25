@@ -62,13 +62,14 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
 | Option        | Type                  | Description                                                                                                                        |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `packageVsix` | `boolean` or `string` | If set to `true`, the plugin will generate a `.vsix` file. If is a string, it will be used as value for `--out` of `vsce package`. |
+| `publish`     | `boolean`             | The plugin will publish the package unless this option is set to `false`, in which case il will only package the extension.        |
 
 ### Environment Variables
 
-| Variable   | Description                                                                             |
-| ---------- | --------------------------------------------------------------------------------------- |
-| `VSCE_PAT` | **Required**. The personal access token to publish the extension of VS Code Marketplace |
-| `OVSX_PAT` | _Optional_. The personal access token to push to OpenVSX                                |
+| Variable   | Description                                                                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `VSCE_PAT` | _**Required**_ unless `publish` is set to `false`. The personal access token to publish the extension of VS Code Marketplace |
+| `OVSX_PAT` | _Optional_. The personal access token to push to OpenVSX                                                                     |
 
 ### Publishing to OpenVSX
 
