@@ -139,3 +139,18 @@ test('publish that is already verified & prepared', async t => {
     semanticReleasePayload.logger
   ]);
 });
+
+test('it does not publish the package if publishing is disabled', async t => {
+  const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
+  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
+    './lib/verify': verifyVsceStub,
+    './lib/publish': vscePublishStub,
+    './lib/prepare': vscePrepareStub
+  });
+
+  await verifyConditions({ ...pluginConfig, publish: false }, semanticReleasePayload);
+  await prepare({ ...pluginConfig, publish: false }, semanticReleasePayload);
+  await publish({ ...pluginConfig, publish: false }, semanticReleasePayload);
+
+  t.true(vscePublishStub.notCalled);
+});
