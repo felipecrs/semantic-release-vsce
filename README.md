@@ -62,7 +62,7 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
 | Option        | Type                  | Description                                                                                                                        |
 | ------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `packageVsix` | `boolean` or `string` | If set to `true`, the plugin will generate a `.vsix` file. If is a string, it will be used as value for `--out` of `vsce package`. |
-| `publish`     | `boolean`             | The plugin will publish the package unless this option is set to `false`, in which case il will only package the extension.        |
+| `publish`     | `boolean`             | The plugin will publish the package unless this option is set to `false`, in which case it will only package the extension `vsix`.        |
 
 ### Environment Variables
 
