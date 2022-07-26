@@ -32,3 +32,21 @@ test('rejects with verify-pkg', async t => {
 
   await t.throwsAsync(() => verify(logger));
 });
+
+test('is does not verify the auth tokens if publishing is disabled', async t => {
+  const stubs = {
+    verifyPkgStub: sinon.stub().resolves(),
+    verifyAuthStub: sinon.stub().resolves(),
+    verifyOvsxAuthStub: sinon.stub().resolves()
+  };
+  const verify = proxyquire('../lib/verify', {
+    './verify-pkg': stubs.verifyPkgStub,
+    './verify-auth': stubs.verifyAuthStub,
+    './verify-ovsx-auth': stubs.verifyOvsxAuthStub
+  });
+
+  await verify(logger, { publish: false });
+
+  t.true(stubs.verifyAuthStub.notCalled);
+  t.true(stubs.verifyOvsxAuthStub.notCalled);
+});

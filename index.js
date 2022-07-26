@@ -7,7 +7,7 @@ let prepared = false;
 let packagePath;
 
 async function verifyConditions (pluginConfig, { logger }) {
-  await verifyVsce(logger);
+  await verifyVsce(logger, pluginConfig);
   verified = true;
 }
 
@@ -30,6 +30,12 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
     // BC: prior to semantic-release v15 prepare was part of publish
     packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
   }
+
+  // If publishing is disabled, return early.
+  if (pluginConfig?.publish === false) {
+    return;
+  }
+
   return vscePublish(version, packagePath, logger);
 }
 
