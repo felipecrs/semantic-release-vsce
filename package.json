@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
-    "execa": "^5.0.0",
+    "execa": "^6.1.0",
     "fs-extra": "^10.0.0",
     "ovsx": "^0.5.0",
     "vsce": "^2.6.3"
