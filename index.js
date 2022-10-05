@@ -6,29 +6,29 @@ let verified = false;
 let prepared = false;
 let packagePath;
 
-async function verifyConditions (pluginConfig, { logger }) {
-  await verifyVsce(logger, pluginConfig);
+async function verifyConditions (pluginConfig, context) {
+  await verifyVsce(context, pluginConfig);
   verified = true;
 }
 
-async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
+async function prepare (pluginConfig, context) {
   if (!verified) {
-    await verifyVsce(logger);
+    await verifyVsce(context);
     verified = true;
   }
-  packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
+  packagePath = await vscePrepare(context, pluginConfig);
   prepared = true;
 }
 
-async function publish (pluginConfig, { nextRelease: { version }, logger }) {
+async function publish (pluginConfig, context) {
   if (!verified) {
-    await verifyVsce(logger);
+    await verifyVsce(context);
     verified = true;
   }
 
   if (!prepared) {
     // BC: prior to semantic-release v15 prepare was part of publish
-    packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
+    packagePath = await vscePrepare(context, pluginConfig);
   }
 
   // If publishing is disabled, return early.
@@ -36,7 +36,7 @@ async function publish (pluginConfig, { nextRelease: { version }, logger }) {
     return;
   }
 
-  return vscePublish(version, packagePath, logger);
+  return vscePublish(context, packagePath);
 }
 
 module.exports = {
