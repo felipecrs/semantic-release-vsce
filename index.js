@@ -38,6 +38,12 @@ async function publish (pluginConfig, { nextRelease: { version }, logger, cwd })
     return;
   }
 
+  if (pluginConfig?.publishPackagePath) {
+    // Expand glob
+    const glob = require('glob');
+    packagePath = glob.sync(pluginConfig.publishPackagePath, { cwd });
+  }
+
   return vscePublish(version, packagePath, logger);
 }
 
