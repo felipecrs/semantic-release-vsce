@@ -1,3 +1,5 @@
+// @ts-check
+
 const verifyVsce = require('./lib/verify');
 const vscePublish = require('./lib/publish');
 const vscePrepare = require('./lib/prepare');
@@ -6,29 +8,29 @@ let verified = false;
 let prepared = false;
 let packagePath;
 
-async function verifyConditions (pluginConfig, { logger }) {
-  await verifyVsce(logger, pluginConfig);
+async function verifyConditions (pluginConfig, { logger, cwd }) {
+  await verifyVsce(pluginConfig, { logger, cwd });
   verified = true;
 }
 
-async function prepare (pluginConfig, { nextRelease: { version }, logger }) {
+async function prepare (pluginConfig, { nextRelease: { version }, logger, cwd }) {
   if (!verified) {
-    await verifyVsce(logger);
+    await verifyVsce(pluginConfig, { logger, cwd });
     verified = true;
   }
-  packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
+  packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger, cwd);
   prepared = true;
 }
 
-async function publish (pluginConfig, { nextRelease: { version }, logger }) {
+async function publish (pluginConfig, { nextRelease: { version }, logger, cwd }) {
   if (!verified) {
-    await verifyVsce(logger);
+    await verifyVsce(pluginConfig, { logger, cwd });
     verified = true;
   }
 
   if (!prepared) {
     // BC: prior to semantic-release v15 prepare was part of publish
-    packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger);
+    packagePath = await vscePrepare(version, pluginConfig.packageVsix, logger, cwd);
   }
 
   // If publishing is disabled, return early.

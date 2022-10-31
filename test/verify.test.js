@@ -5,6 +5,7 @@ const proxyquire = require('proxyquire');
 const logger = {
   log: sinon.fake()
 };
+const cwd = process.cwd();
 
 test('resolves', async t => {
   const verify = proxyquire('../lib/verify', {
@@ -12,7 +13,7 @@ test('resolves', async t => {
     './verify-pkg': sinon.stub().resolves()
   });
 
-  await t.notThrowsAsync(() => verify(logger));
+  await t.notThrowsAsync(() => verify({}, { logger, cwd }));
 });
 
 test('rejects with verify-auth', async t => {
@@ -21,7 +22,7 @@ test('rejects with verify-auth', async t => {
     './verify-pkg': sinon.stub().resolves()
   });
 
-  await t.throwsAsync(() => verify(logger));
+  await t.throwsAsync(() => verify({}, { logger, cwd }));
 });
 
 test('rejects with verify-pkg', async t => {
@@ -30,7 +31,7 @@ test('rejects with verify-pkg', async t => {
     './verify-pkg': sinon.stub().rejects()
   });
 
-  await t.throwsAsync(() => verify(logger));
+  await t.throwsAsync(() => verify({}, { logger, cwd }));
 });
 
 test('is does not verify the auth tokens if publishing is disabled', async t => {
@@ -45,7 +46,7 @@ test('is does not verify the auth tokens if publishing is disabled', async t => 
     './verify-ovsx-auth': stubs.verifyOvsxAuthStub
   });
 
-  await verify(logger, { publish: false });
+  await verify({ publish: false }, { logger, cwd });
 
   t.true(stubs.verifyAuthStub.notCalled);
   t.true(stubs.verifyOvsxAuthStub.notCalled);

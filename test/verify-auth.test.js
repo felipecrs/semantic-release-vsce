@@ -6,6 +6,7 @@ const SemanticReleaseError = require('@semantic-release/error');
 const logger = {
   log: sinon.fake()
 };
+const cwd = process.cwd();
 
 test('VSCE_PAT is set', async t => {
   sinon.stub(process, 'env').value({
@@ -13,7 +14,7 @@ test('VSCE_PAT is set', async t => {
   });
 
   const verifyAuth = proxyquire('../lib/verify-auth', {
-    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true }).resolves()
+    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd }).resolves()
   });
 
   await t.notThrowsAsync(() => verifyAuth(logger));
@@ -23,7 +24,7 @@ test('VSCE_PAT is not set', async t => {
   sinon.stub(process, 'env').value({});
 
   const verifyAuth = proxyquire('../lib/verify-auth', {
-    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true }).resolves()
+    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd }).resolves()
   });
 
   await t.throwsAsync(() => verifyAuth(logger), { instanceOf: SemanticReleaseError, code: 'ENOVSCEPAT' });
@@ -35,7 +36,7 @@ test('VSCE_PAT is valid', async t => {
   });
 
   const verifyAuth = proxyquire('../lib/verify-auth', {
-    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true }).resolves()
+    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd }).resolves()
   });
 
   await t.notThrowsAsync(() => verifyAuth(logger));
@@ -47,7 +48,7 @@ test('VSCE_PAT is invalid', async t => {
   });
 
   const verifyAuth = proxyquire('../lib/verify-auth', {
-    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true }).rejects()
+    execa: sinon.stub().withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd }).rejects()
   });
 
   await t.throwsAsync(() => verifyAuth(logger), { instanceOf: SemanticReleaseError, code: 'EINVALIDVSCETOKEN' });

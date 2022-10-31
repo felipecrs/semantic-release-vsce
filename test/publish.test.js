@@ -5,6 +5,7 @@ const proxyquire = require('proxyquire');
 const logger = {
   log: sinon.fake()
 };
+const cwd = process.cwd();
 
 test.beforeEach(t => {
   t.context.stubs = {
@@ -35,13 +36,13 @@ test('publish', async t => {
   sinon.stub(process, 'env').value({
     VSCE_PAT: token
   });
-  const result = await publish(version, undefined, logger);
+  const result = await publish(version, undefined, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit', preferLocal: true, cwd }]);
 });
 
 test('publish with packagePath', async t => {
@@ -64,13 +65,13 @@ test('publish with packagePath', async t => {
   sinon.stub(process, 'env').value({
     VSCE_PAT: token
   });
-  const result = await publish(version, packagePath, logger);
+  const result = await publish(version, packagePath, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });
 
 test('publish to OpenVSX', async t => {
@@ -94,17 +95,17 @@ test('publish to OpenVSX', async t => {
     OVSX_PAT: token,
     VSCE_PAT: token
   });
-  const result = await publish(version, packagePath, logger);
+  const result = await publish(version, packagePath, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 
   // t.deepEqual(result[1], {
   //   name: 'Open VSX Registry',
   //   url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`
   // });
-  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });

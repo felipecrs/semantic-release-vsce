@@ -5,6 +5,7 @@ const proxyquire = require('proxyquire');
 const logger = {
   log: sinon.fake()
 };
+const cwd = process.cwd();
 
 test.beforeEach(t => {
   t.context.stubs = {
@@ -37,10 +38,10 @@ test('packageVsix is a string', async t => {
   const version = '1.0.0';
   const packageVsix = 'test.vsix';
   const packagePath = packageVsix;
-  const result = await prepare(version, packageVsix, logger);
+  const result = await prepare(version, packageVsix, logger, cwd);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });
 
 test('packageVsix is true', async t => {
@@ -60,10 +61,10 @@ test('packageVsix is true', async t => {
   const packageVsix = true;
   const packagePath = `${name}-${version}.vsix`;
 
-  const result = await prepare(version, packageVsix, logger);
+  const result = await prepare(version, packageVsix, logger, cwd);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });
 
 test('packageVsix is not set but OVSX_PAT is', async t => {
@@ -87,8 +88,8 @@ test('packageVsix is not set but OVSX_PAT is', async t => {
   const packageVsix = undefined;
   const packagePath = `${name}-${version}.vsix`;
 
-  const result = await prepare(version, packageVsix, logger);
+  const result = await prepare(version, packageVsix, logger, cwd);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });
