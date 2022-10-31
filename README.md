@@ -71,7 +71,7 @@ Whether to package or not the extension `.vsix`, or where to place it. This cont
 
 ### `publish`
 
-Whether to publish or not the extension to Visual Studio Marketplace. This controls if `vsce publish` gets called or not.
+Whether to publish or not the extension to Visual Studio Marketplace or OpenVSX (if the `OVSX_PAT` environment variable is present). This controls if `vsce publish` or `ovsx publish` (if the `OVSX_PAT` environment variable is present) gets called or not.
 
 | Value            | Description                                                    |
 | ---------------- | -------------------------------------------------------------- |
@@ -84,7 +84,7 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 | Value              | Description                                                                                                       |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `"auto"` (default) | uses the `.vsix` packaged during the `prepare` step (if packaged)                                                 |
+| `"auto"` (default) | uses the `.vsix` packaged during the `prepare` step (if packaged), or behave as `false` otherwise                                                 |
 | `false`            | do not use a `.vsix` file to publish, which causes `vsce` to package the extension as part of the publish process |
 | a `string`         | publish the specified `.vsix` file(s). This can be a glob pattern, or a comma-separated list of files             |
 
