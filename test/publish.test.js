@@ -41,7 +41,7 @@ test('publish', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit', preferLocal: true }]);
 });
 
 test('publish with packagePath', async t => {
@@ -70,7 +70,7 @@ test('publish with packagePath', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true }]);
 });
 
 test('publish to OpenVSX', async t => {
@@ -100,11 +100,11 @@ test('publish to OpenVSX', async t => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true }]);
 
   // t.deepEqual(result[1], {
   //   name: 'Open VSX Registry',
   //   url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`
   // });
-  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', packagePath], { stdio: 'inherit', preferLocal: true }]);
 });

@@ -40,7 +40,7 @@ test('packageVsix is a string', async t => {
   const result = await prepare(version, packageVsix, logger);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
 });
 
 test('packageVsix is true', async t => {
@@ -63,7 +63,7 @@ test('packageVsix is true', async t => {
   const result = await prepare(version, packageVsix, logger);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
 });
 
 test('packageVsix is not set but OVSX_PAT is', async t => {
@@ -90,5 +90,5 @@ test('packageVsix is not set but OVSX_PAT is', async t => {
   const result = await prepare(version, packageVsix, logger);
 
   t.deepEqual(result, packagePath);
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit' }]);
+  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['package', version, '--no-git-tag-version', '--out', packagePath], { stdio: 'inherit', preferLocal: true }]);
 });
