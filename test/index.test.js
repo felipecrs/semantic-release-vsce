@@ -8,7 +8,8 @@ const semanticReleasePayload = {
   },
   logger: {
     log: sinon.fake()
-  }
+  },
+  cwd: process.cwd()
 };
 
 const pluginConfig = {
@@ -39,7 +40,7 @@ test('verifyConditions', async t => {
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
 
-  t.true(verifyVsceStub.calledOnceWith(semanticReleasePayload.logger));
+  t.true(verifyVsceStub.calledOnceWith(pluginConfig, { logger: semanticReleasePayload.logger, cwd: semanticReleasePayload.cwd }));
 });
 
 test('prepare and unverified', async t => {
@@ -53,11 +54,12 @@ test('prepare and unverified', async t => {
 
   await prepare(pluginConfig, semanticReleasePayload);
 
-  t.true(verifyVsceStub.calledOnceWith(semanticReleasePayload.logger));
+  t.true(verifyVsceStub.calledOnceWith(pluginConfig, { logger: semanticReleasePayload.logger, cwd: semanticReleasePayload.cwd }));
   t.deepEqual(vscePrepareStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     pluginConfig.packageVsix,
-    semanticReleasePayload.logger
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
   ]);
 });
 
@@ -76,7 +78,8 @@ test('prepare and verified', async t => {
   t.deepEqual(vscePrepareStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     pluginConfig.packageVsix,
-    semanticReleasePayload.logger
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
   ]);
 });
 
