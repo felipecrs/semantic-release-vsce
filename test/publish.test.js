@@ -107,5 +107,5 @@ test('publish to OpenVSX', async t => {
   //   name: 'Open VSX Registry',
   //   url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`
   // });
-  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
+  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
 });

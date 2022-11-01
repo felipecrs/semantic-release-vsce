@@ -84,7 +84,7 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 | Value              | Description                                                                                                       |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `"auto"` (default) | uses the `.vsix` packaged during the `prepare` step (if packaged), or behave as `false` otherwise                                                 |
+| `"auto"` (default) | uses the `.vsix` packaged during the `prepare` step (if packaged), or behave as `false` otherwise                 |
 | `false`            | do not use a `.vsix` file to publish, which causes `vsce` to package the extension as part of the publish process |
 | a `string`         | publish the specified `.vsix` file(s). This can be a glob pattern, or a comma-separated list of files             |
 
@@ -135,32 +135,64 @@ jobs:
 
 ### Platform-specific on GitHub Actions
 
-```console
-npm install --save-dev semantic-release-export-data
-```
+1. Install [`semantic-release-stop-before-publish`](https://github.com/felipecrs/semantic-release-stop-before-publish)
 
-```json
-{
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    "semantic-release-export-data",
-    [
-      "semantic-release-vsce",
-      {
-        "packageVsix": false,
-        "publishPackagePath": "*.vsix"
-      }
-    ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": "*.vsix"
-      }
-    ]
-  ]
-}
-```
+   ```console
+   npm install --save-dev semantic-release-stop-before-publish
+   ```
+
+   We will use it to make `semantic-release` stop before publishing anything, so that we can use `semantic-release` to build each `.vsix` in a matrix.
+
+2. Separate your `semantic-release` configuration into two, one for packaging and another for publishing.
+
+   The one for packaging has `semantic-release-stop-before-publish` so that `semantic-release` does not publish anything (which includes the git tag).
+
+   ```js
+   // package.release.config.js
+   module.exports = {
+     plugins: [
+       "@semantic-release/commit-analyzer",
+       "@semantic-release/release-notes-generator",
+       [
+         "semantic-release-vsce",
+         {
+           packageVsix: true,
+           publish: false, // no-op since we use semantic-release-stop-before-publish
+         },
+       ],
+       "semantic-release-stop-before-publish",
+     ],
+   };
+   ```
+
+   The one for publishing does not package the `.vsix`, but publishes all the `*.vsix` files.
+
+   ```js
+   // publish.release.config.js
+   module.exports = {
+     plugins: [
+       "@semantic-release/commit-analyzer",
+       "@semantic-release/release-notes-generator",
+       [
+         "semantic-release-vsce",
+         {
+           packageVsix: false,
+           publishPackagePath: "*.vsix",
+         },
+       ],
+       [
+         "@semantic-release/github",
+         {
+           assets: "*.vsix",
+         },
+       ],
+     ],
+   };
+   ```
+
+   > **Note:** do not forget to remove your existing `semantic-release` configuration.
+
+3. Create a workflow file like below:
 
 ```yaml
 # .github/workflows/ci.yaml
@@ -171,28 +203,7 @@ on:
     branches: [master]
 
 jobs:
-  get-next-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - run: npm ci
-      - run: npx semantic-release --dry-run
-        id: get-next-version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # In case you want to publish to OpenVSX
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
-    outputs:
-      new-release-published: ${{ steps.get-next-version.outputs.new-release-published }}
-      new-release-version: ${{ steps.get-next-version.outputs.new-release-version }}
-
   build:
-    needs: get-next-version
-    if: needs.get-next-version.outputs.new-release-published == 'true'
     strategy:
       matrix:
         include:
@@ -243,7 +254,15 @@ jobs:
           npm_config_arch: ${{ matrix.npm_config_arch }}
       - shell: pwsh
         run: echo "target=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
-      - run: npx vsce package --target ${{ env.target }}
+      - run: npx semantic-release --extends package.release.config.js
+        env:
+          VSCE_TARGET: ${{ env.target }}
+          # All tokens are required since semantic-release needs to validate them
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          # In case you want to publish to OpenVSX
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.target }}
@@ -259,7 +278,7 @@ jobs:
           node-version: 16
       - run: npm ci
       - uses: actions/download-artifact@v3
-      - run: npx semantic-release
+      - run: npx semantic-release --extends publish.release.config.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

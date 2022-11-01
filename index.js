@@ -44,7 +44,7 @@ async function publish (pluginConfig, { nextRelease: { version }, logger, cwd })
     packagePath = glob.sync(pluginConfig.publishPackagePath, { cwd });
   }
 
-  return vscePublish(version, packagePath, logger);
+  return vscePublish(version, packagePath, logger, cwd);
 }
 
 module.exports = {

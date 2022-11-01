@@ -98,7 +98,8 @@ test('publish that is unverified and unprepared', async t => {
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     undefined,
-    semanticReleasePayload.logger
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
   ]);
 });
 
@@ -118,7 +119,8 @@ test('publish that is verified but unprepared', async t => {
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     undefined,
-    semanticReleasePayload.logger
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
   ]);
 });
 
@@ -139,7 +141,8 @@ test('publish that is already verified & prepared', async t => {
   t.deepEqual(vscePublishStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
     packagePath,
-    semanticReleasePayload.logger
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
   ]);
 });
 
@@ -156,4 +159,32 @@ test('it does not publish the package if publishing is disabled', async t => {
   await publish({ ...pluginConfig, publish: false }, semanticReleasePayload);
 
   t.true(vscePublishStub.notCalled);
+});
+
+test('expand globs if publishPackagePath is set', async t => {
+  const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
+  const { publish } = proxyquire('../index.js', {
+    './lib/verify': verifyVsceStub,
+    './lib/publish': vscePublishStub,
+    './lib/prepare': vscePrepareStub,
+    glob: {
+      sync: sinon.stub().returns(['package1.vsix', 'package2.vsix'])
+    }
+  });
+
+  const pluginConfig = {
+    publishPackagePath: 'package*.vsix',
+    packageVsix: false
+  };
+
+  await publish(pluginConfig, semanticReleasePayload);
+
+  t.true(verifyVsceStub.calledOnce);
+  t.true(vscePrepareStub.calledOnce);
+  t.deepEqual(vscePublishStub.getCall(0).args, [
+    semanticReleasePayload.nextRelease.version,
+    ['package1.vsix', 'package2.vsix'],
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd
+  ]);
 });
