@@ -90,10 +90,11 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 ### Environment variables
 
-| Variable   | Description                                                                                                                        |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `VSCE_PAT` | **Required** (unless `publish` is set to `false`). The personal access token to publish the extension to Visual Studio Marketplace |
-| `OVSX_PAT` | _Optional_. The personal access token to push to OpenVSX                                                                           |
+| Variable      | Description                                                                                                                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VSCE_PAT`    | **Required** (unless `publish` is set to `false`). The personal access token to publish the extension to Visual Studio Marketplace                                                                     |
+| `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). See [the platform-specific example](#platform-specific-on-github-actions) ) |
+| `OVSX_PAT`    | _Optional_. The personal access token to push to OpenVSX                                                                                                                                               |
 
 ### Publishing to OpenVSX
 
