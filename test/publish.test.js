@@ -1,5 +1,6 @@
+// Run tests serially to avoid env pollution
+const test = require('ava').serial;
 const sinon = require('sinon');
-const test = require('ava');
 const proxyquire = require('proxyquire');
 
 const logger = {
@@ -78,6 +79,73 @@ test('publish with packagePath', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', '--packagePath', packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
+});
+
+test('publish with multiple packagePath', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = ['test.vsix', 'test2.vsix'];
+  const token = 'abc123';
+  sinon.stub(process, 'env').value({
+    VSCE_PAT: token,
+  });
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  t.deepEqual(execaStub.getCall(0).args, [
+    'vsce',
+    ['publish', '--packagePath', ...packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
+});
+
+test('publish with target', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const token = 'abc123';
+  const target = 'linux-x64';
+  sinon.stub(process, 'env').value({
+    VSCE_PAT: token,
+    VSCE_TARGET: target,
+  });
+  const result = await publish(version, undefined, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  t.deepEqual(execaStub.getCall(0).args, [
+    'vsce',
+    ['publish', version, '--no-git-tag-version', '--target', target],
     { stdio: 'inherit', preferLocal: true, cwd },
   ]);
 });

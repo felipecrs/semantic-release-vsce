@@ -21,7 +21,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "prettier --check . && eslint .",
     "release": "semantic-release",
     "test": "nyc ava",
     "posttest": "npm run lint",
