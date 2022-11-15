@@ -6,19 +6,19 @@ module.exports = {
         releaseRules: [
           {
             type: 'perf',
-            release: 'patch'
+            release: 'patch',
           },
           {
             type: 'refactor',
-            release: 'patch'
+            release: 'patch',
           },
           {
             type: 'build',
             scope: 'deps',
-            release: 'patch'
-          }
-        ]
-      }
+            release: 'patch',
+          },
+        ],
+      },
     ],
     [
       '@semantic-release/release-notes-generator',
@@ -27,40 +27,40 @@ module.exports = {
           types: [
             {
               type: 'feat',
-              section: 'Features'
+              section: 'Features',
             },
             {
               type: 'fix',
-              section: 'Bug Fixes'
+              section: 'Bug Fixes',
             },
             {
               type: 'perf',
-              section: 'Performance Improvements'
+              section: 'Performance Improvements',
             },
             {
               type: 'revert',
-              section: 'Reverts'
+              section: 'Reverts',
             },
             {
               type: 'refactor',
-              section: 'Code Refactoring'
+              section: 'Code Refactoring',
             },
             {
               type: 'build',
               scope: 'deps',
-              section: 'Dependencies'
-            }
-          ]
-        }
-      }
+              section: 'Dependencies',
+            },
+          ],
+        },
+      },
     ],
     '@semantic-release/npm',
     [
       '@semantic-release/github',
       {
-        addReleases: 'bottom'
-      }
-    ]
+        addReleases: 'bottom',
+      },
+    ],
   ],
-  preset: 'conventionalcommits'
+  preset: 'conventionalcommits',
 };

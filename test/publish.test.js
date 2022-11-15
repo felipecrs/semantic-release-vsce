@@ -3,21 +3,21 @@ const test = require('ava');
 const proxyquire = require('proxyquire');
 
 const logger = {
-  log: sinon.fake()
+  log: sinon.fake(),
 };
 const cwd = process.cwd();
 
-test.beforeEach(t => {
+test.beforeEach((t) => {
   t.context.stubs = {
-    execaStub: sinon.stub()
+    execaStub: sinon.stub(),
   };
 });
 
-test.afterEach(t => {
+test.afterEach((t) => {
   t.context.stubs.execaStub.resetHistory();
 });
 
-test('publish', async t => {
+test('publish', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
@@ -26,26 +26,30 @@ test('publish', async t => {
     'fs-extra': {
       readJson: sinon.stub().returns({
         publisher,
-        name
-      })
-    }
+        name,
+      }),
+    },
   });
 
   const version = '1.0.0';
   const token = 'abc123';
   sinon.stub(process, 'env').value({
-    VSCE_PAT: token
+    VSCE_PAT: token,
   });
   const result = await publish(version, undefined, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
-    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', version, '--no-git-tag-version'], { stdio: 'inherit', preferLocal: true, cwd }]);
+  t.deepEqual(execaStub.getCall(0).args, [
+    'vsce',
+    ['publish', version, '--no-git-tag-version'],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
 });
 
-test('publish with packagePath', async t => {
+test('publish with packagePath', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
@@ -54,27 +58,31 @@ test('publish with packagePath', async t => {
     'fs-extra': {
       readJson: sinon.stub().returns({
         publisher,
-        name
-      })
-    }
+        name,
+      }),
+    },
   });
 
   const version = '1.0.0';
   const packagePath = 'test.vsix';
   const token = 'abc123';
   sinon.stub(process, 'env').value({
-    VSCE_PAT: token
+    VSCE_PAT: token,
   });
   const result = await publish(version, packagePath, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
-    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
+  t.deepEqual(execaStub.getCall(0).args, [
+    'vsce',
+    ['publish', '--packagePath', packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
 });
 
-test('publish to OpenVSX', async t => {
+test('publish to OpenVSX', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
@@ -83,9 +91,9 @@ test('publish to OpenVSX', async t => {
     'fs-extra': {
       readJson: sinon.stub().returns({
         publisher,
-        name
-      })
-    }
+        name,
+      }),
+    },
   });
 
   const version = '1.0.0';
@@ -93,19 +101,27 @@ test('publish to OpenVSX', async t => {
   const token = 'abc123';
   sinon.stub(process, 'env').value({
     OVSX_PAT: token,
-    VSCE_PAT: token
+    VSCE_PAT: token,
   });
   const result = await publish(version, packagePath, logger, cwd);
 
   t.deepEqual(result, {
     name: 'Visual Studio Marketplace',
-    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, ['vsce', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
+  t.deepEqual(execaStub.getCall(0).args, [
+    'vsce',
+    ['publish', '--packagePath', packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
 
   // t.deepEqual(result[1], {
   //   name: 'Open VSX Registry',
   //   url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`
   // });
-  t.deepEqual(execaStub.getCall(1).args, ['ovsx', ['publish', '--packagePath', packagePath], { stdio: 'inherit', preferLocal: true, cwd }]);
+  t.deepEqual(execaStub.getCall(1).args, [
+    'ovsx',
+    ['publish', '--packagePath', packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
 });

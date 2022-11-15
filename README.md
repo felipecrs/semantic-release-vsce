@@ -152,16 +152,16 @@ jobs:
    // package.release.config.js
    module.exports = {
      plugins: [
-       "@semantic-release/commit-analyzer",
-       "@semantic-release/release-notes-generator",
+       '@semantic-release/commit-analyzer',
+       '@semantic-release/release-notes-generator',
        [
-         "semantic-release-vsce",
+         'semantic-release-vsce',
          {
            packageVsix: true,
            publish: false, // no-op since we use semantic-release-stop-before-publish
          },
        ],
-       "semantic-release-stop-before-publish",
+       'semantic-release-stop-before-publish',
      ],
    };
    ```
@@ -172,19 +172,19 @@ jobs:
    // publish.release.config.js
    module.exports = {
      plugins: [
-       "@semantic-release/commit-analyzer",
-       "@semantic-release/release-notes-generator",
+       '@semantic-release/commit-analyzer',
+       '@semantic-release/release-notes-generator',
        [
-         "semantic-release-vsce",
+         'semantic-release-vsce',
          {
            packageVsix: false,
-           publishPackagePath: "*.vsix",
+           publishPackagePath: '*.vsix',
          },
        ],
        [
-         "@semantic-release/github",
+         '@semantic-release/github',
          {
-           assets: "*.vsix",
+           assets: '*.vsix',
          },
        ],
      ],
@@ -267,7 +267,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.target }}
-          path: "*.vsix"
+          path: '*.vsix'
 
   release:
     runs-on: ubuntu-latest
