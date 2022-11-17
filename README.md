@@ -178,13 +178,13 @@ jobs:
          'semantic-release-vsce',
          {
            packageVsix: false,
-           publishPackagePath: '*.vsix',
+           publishPackagePath: '*/*.vsix',
          },
        ],
        [
          '@semantic-release/github',
          {
-           assets: '*.vsix',
+           assets: '*/*.vsix',
          },
        ],
      ],
@@ -253,20 +253,19 @@ jobs:
       - run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_config_arch }}
-      - shell: pwsh
-        run: echo "target=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
-      - run: npx semantic-release --extends package.release.config.js
+      - name: Set VSCE_TARGET
+        shell: pwsh
+        run: echo "VSCE_TARGET=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
+      - run: npx semantic-release --extends ./package.release.config.js
         env:
-          VSCE_TARGET: ${{ env.target }}
           # All tokens are required since semantic-release needs to validate them
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # In case you want to publish to OpenVSX
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
-
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.target }}
+          name: ${{ env.VSCE_TARGET }}
           path: '*.vsix'
 
   release:
@@ -279,10 +278,12 @@ jobs:
           node-version: 16
       - run: npm ci
       - uses: actions/download-artifact@v3
-      - run: npx semantic-release --extends publish.release.config.js
+      - run: npx semantic-release --extends ./publish.release.config.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # In case you want to publish to OpenVSX
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 ```
+
+A reference implementation can also be found in the [VS Code ShellCheck extension](https://github.com/vscode-shellcheck/vscode-shellcheck/pull/805).
