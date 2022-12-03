@@ -48,11 +48,11 @@
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
+    "@vscode/vsce": "^2.15.0",
     "execa": "^5.0.0",
     "fs-extra": "^10.0.0",
     "glob": "^8.0.3",
-    "ovsx": "^0.6.0",
-    "vsce": "^2.6.3"
+    "ovsx": "^0.6.0"
   },
   "peerDependencies": {
     "semantic-release": ">=18"
