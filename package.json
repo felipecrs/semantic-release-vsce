@@ -51,7 +51,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^10.0.0",
     "glob": "^8.0.3",
-    "ovsx": "^0.5.0",
+    "ovsx": "^0.6.0",
     "vsce": "^2.6.3"
   },
   "peerDependencies": {
