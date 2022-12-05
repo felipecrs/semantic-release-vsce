@@ -90,11 +90,11 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 ### Environment variables
 
-| Variable      | Description                                                                                                                                                                                            |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `VSCE_PAT`    | **Required** (unless `publish` is set to `false`). The personal access token to publish the extension to Visual Studio Marketplace                                                                     |
-| `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). See [the platform-specific example](#platform-specific-on-github-actions) ) |
-| `OVSX_PAT`    | _Optional_. The personal access token to push to OpenVSX                                                                                                                                               |
+| Variable      | Description                                                                                                                                                                                                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VSCE_PAT`    | **Required** (unless `publish` is set to `false`). The personal access token to publish the extension to Visual Studio Marketplace                                                                                                                                                                              |
+| `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
+| `OVSX_PAT`    | _Optional_. The personal access token to push to OpenVSX                                                                                                                                                                                                                                                        |
 
 ### Publishing to OpenVSX
 
@@ -209,63 +209,64 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            platform: win32
-            arch: x64
+            target: win32-x64
             npm_config_arch: x64
           - os: windows-latest
-            platform: win32
-            arch: ia32
+            target: win32-ia32
             npm_config_arch: ia32
           - os: windows-latest
-            platform: win32
-            arch: arm64
+            target: win32-arm64
             npm_config_arch: arm
           - os: ubuntu-latest
-            platform: linux
-            arch: x64
+            taget: linux-x64
             npm_config_arch: x64
           - os: ubuntu-latest
-            platform: linux
-            arch: arm64
+            target: linux-arm64
             npm_config_arch: arm64
           - os: ubuntu-latest
-            platform: linux
-            arch: armhf
+            target: linux-armhf
             npm_config_arch: arm
           - os: ubuntu-latest
-            platform: alpine
-            arch: x64
+            target: alpine-x64
             npm_config_arch: x64
           - os: macos-latest
-            platform: darwin
-            arch: x64
+            target: darwin-x64
             npm_config_arch: x64
           - os: macos-latest
-            platform: darwin
-            arch: arm64
+            target: darwin-arm64
             npm_config_arch: arm64
+          - os: ubuntu-latest
+            target: universal
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
+
+      - if: matrix.target != 'universal'
+        name: Install dependencies (with binaries)
+        run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_config_arch }}
-      - name: Set VSCE_TARGET
-        shell: pwsh
-        run: echo "VSCE_TARGET=${{ matrix.platform }}-${{ matrix.arch }}" >> $env:GITHUB_ENV
+
+      - if: matrix.target == 'universal'
+        name: Install dependencies (without binaries)
+        run: npm ci
+
       - run: npx semantic-release --extends ./package.release.config.js
         env:
+          VSCE_TARGET: ${{ matrix.target }}
           # All tokens are required since semantic-release needs to validate them
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # In case you want to publish to OpenVSX
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
+
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.VSCE_TARGET }}
+          name: ${{ matrix.target }}
           path: '*.vsix'
 
   release:
@@ -273,11 +274,15 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - run: npm ci
+
       - uses: actions/download-artifact@v3
+
       - run: npx semantic-release --extends ./publish.release.config.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
