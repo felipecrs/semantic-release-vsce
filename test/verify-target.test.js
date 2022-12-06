@@ -53,3 +53,13 @@ test('VSCE_TARGET is unsupported', async (t) => {
     code: 'EUNSUPPORTEDVSCETARGET',
   });
 });
+
+test('VSCE_TARGET is universal', async (t) => {
+  sinon.stub(process, 'env').value({
+    VSCE_TARGET: 'universal',
+  });
+
+  const verifyTarget = require('../lib/verify-target');
+
+  await t.notThrowsAsync(() => verifyTarget());
+});
