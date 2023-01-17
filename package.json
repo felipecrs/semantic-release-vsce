@@ -52,7 +52,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^11.1.0",
     "glob": "^8.0.3",
-    "ovsx": "^0.7.1"
+    "ovsx": "^0.8.0"
   },
   "peerDependencies": {
     "semantic-release": ">=18"
