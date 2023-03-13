@@ -51,7 +51,7 @@
     "@vscode/vsce": "^2.15.0",
     "execa": "^5.0.0",
     "fs-extra": "^11.1.0",
-    "glob": "^8.0.3",
+    "glob": "^9.2.1",
     "ovsx": "^0.8.0"
   },
   "peerDependencies": {
