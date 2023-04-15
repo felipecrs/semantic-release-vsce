@@ -96,6 +96,23 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 | `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
 | `OVSX_PAT`    | _Optional_. The personal access token to push to OpenVSX                                                                                                                                                                                                                                                        |
 
+### Configuring `vsce`
+
+You can set `vsce` options in the `package.json`, like:
+
+```jsonc
+// package.json
+{
+  "vsce": {
+    "baseImagesUrl": "https://my.custom/base/images/url"
+    "dependencies": true,
+    "yarn": false
+  }
+}
+```
+
+For more information, check the [`vsce` docs](https://github.com/microsoft/vscode-vsce#configuration).
+
 ### Publishing to OpenVSX
 
 Publishing extensions to OpenVSX using this plugin is easy:
