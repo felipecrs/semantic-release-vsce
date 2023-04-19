@@ -181,7 +181,9 @@ test('expand globs if publishPackagePath is set', async (t) => {
     './lib/publish': vscePublishStub,
     './lib/prepare': vscePrepareStub,
     glob: {
-      sync: sinon.stub().returns(['package1.vsix', 'package2.vsix']),
+      glob: {
+        sync: sinon.stub().returns(['package1.vsix', 'package2.vsix']),
+      },
     },
   });
 

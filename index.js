@@ -56,8 +56,8 @@ async function publish(
 
   if (pluginConfig?.publishPackagePath) {
     // Expand glob
-    const glob = require('glob');
-    packagePath = glob.sync(pluginConfig.publishPackagePath, { cwd });
+    const globSync = require('glob').glob.sync;
+    packagePath = globSync(pluginConfig.publishPackagePath, { cwd });
   }
 
   return vscePublish(version, packagePath, logger, cwd);
