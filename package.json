@@ -43,8 +43,8 @@
     ]
   },
   "volta": {
-    "node": "18.12.1",
-    "npm": "9.1.1"
+    "node": "18.16.1",
+    "npm": "9.8.0"
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
