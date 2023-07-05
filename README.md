@@ -92,7 +92,7 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 | Variable      | Description                                                                                                                                                                                                                                                                                                     |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VSCE_PAT`    | **Required** (unless `publish` is set to `false`). The personal access token to publish the extension to Visual Studio Marketplace                                                                                                                                                                              |
+| `VSCE_PAT`    | **Required** (unless `publish` is set to `false`, or the `OVSX_PAT` environment variable is set). The personal access token to publish the extension to Visual Studio Marketplace                                                                                                                               |
 | `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
 | `OVSX_PAT`    | _Optional_. The personal access token to push to OpenVSX                                                                                                                                                                                                                                                        |
 
@@ -104,7 +104,7 @@ You can set `vsce` options in the `package.json`, like:
 // package.json
 {
   "vsce": {
-    "baseImagesUrl": "https://my.custom/base/images/url"
+    "baseImagesUrl": "https://my.custom/base/images/url",
     "dependencies": true,
     "yarn": false
   }
@@ -125,7 +125,7 @@ Publishing extensions to OpenVSX using this plugin is easy:
 
 ## Examples
 
-### Github Actions
+### GitHub Actions
 
 ```yaml
 name: release

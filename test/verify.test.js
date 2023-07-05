@@ -1,3 +1,4 @@
+const SemanticReleaseError = require('@semantic-release/error');
 const test = require('ava');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -62,7 +63,7 @@ test('rejects with verify-ovsx-auth', async (t) => {
   await t.throwsAsync(() => verify({}, { logger, cwd }));
 });
 
-test('is does not verify the auth tokens if publishing is disabled', async (t) => {
+test('it does not verify the auth tokens if publishing is disabled', async (t) => {
   const stubs = {
     verifyPkgStub: sinon.stub().resolves(),
     verifyTargetStub: sinon.stub().resolves(),
@@ -80,4 +81,28 @@ test('is does not verify the auth tokens if publishing is disabled', async (t) =
 
   t.true(stubs.verifyAuthStub.notCalled);
   t.true(stubs.verifyOvsxAuthStub.notCalled);
+});
+
+test('it should handle `ENOVSCEPAT` error when publishing to OpenVSX is enabled', async (t) => {
+  const stubs = {
+    verifyPkgStub: sinon.stub().resolves(),
+    verifyTargetStub: sinon.stub().resolves(),
+    verifyAuthStub: sinon
+      .stub()
+      .rejects(new SemanticReleaseError('message', 'ENOVSCEPAT')),
+    verifyOvsxAuthStub: sinon.stub().resolves(),
+    utilsStub: { isOvsxEnabled: sinon.stub().returns(true) },
+  };
+  const verify = proxyquire('../lib/verify', {
+    './verify-pkg': stubs.verifyPkgStub,
+    './verify-target': stubs.verifyTargetStub,
+    './verify-auth': stubs.verifyAuthStub,
+    './verify-ovsx-auth': stubs.verifyOvsxAuthStub,
+    './utils': stubs.utilsStub,
+  });
+
+  await verify({}, { logger, cwd });
+
+  t.deepEqual(stubs.verifyAuthStub.getCall(0).args, [logger, cwd]);
+  t.deepEqual(stubs.verifyOvsxAuthStub.getCall(0).args, [logger, cwd]);
 });
