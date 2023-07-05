@@ -15,7 +15,7 @@ async function verifyConditions(pluginConfig, { logger, cwd }) {
 
 async function prepare(
   pluginConfig,
-  { nextRelease: { version }, logger, cwd }
+  { nextRelease: { version }, logger, cwd },
 ) {
   if (!verified) {
     await verifyVsce(pluginConfig, { logger, cwd });
@@ -25,14 +25,14 @@ async function prepare(
     version,
     pluginConfig.packageVsix,
     logger,
-    cwd
+    cwd,
   );
   prepared = true;
 }
 
 async function publish(
   pluginConfig,
-  { nextRelease: { version }, logger, cwd }
+  { nextRelease: { version }, logger, cwd },
 ) {
   if (!verified) {
     await verifyVsce(pluginConfig, { logger, cwd });
@@ -45,7 +45,7 @@ async function publish(
       version,
       pluginConfig.packageVsix,
       logger,
-      cwd
+      cwd,
     );
   }
 
