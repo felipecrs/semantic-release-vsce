@@ -44,7 +44,7 @@ test('verifyConditions', async (t) => {
     verifyVsceStub.calledOnceWith(pluginConfig, {
       logger: semanticReleasePayload.logger,
       cwd: semanticReleasePayload.cwd,
-    })
+    }),
   );
 });
 
@@ -63,7 +63,7 @@ test('prepare and unverified', async (t) => {
     verifyVsceStub.calledOnceWith(pluginConfig, {
       logger: semanticReleasePayload.logger,
       cwd: semanticReleasePayload.cwd,
-    })
+    }),
   );
   t.deepEqual(vscePrepareStub.getCall(0).args, [
     semanticReleasePayload.nextRelease.version,
@@ -166,7 +166,7 @@ test('it does not publish the package if publishing is disabled', async (t) => {
 
   await verifyConditions(
     { ...pluginConfig, publish: false },
-    semanticReleasePayload
+    semanticReleasePayload,
   );
   await prepare({ ...pluginConfig, publish: false }, semanticReleasePayload);
   await publish({ ...pluginConfig, publish: false }, semanticReleasePayload);
