@@ -228,7 +228,7 @@ test('publish to OpenVSX only', async (t) => {
   ]);
 });
 
-test('should be not publish when neither vsce not ovsx personal access is configured', async (t) => {
+test('should not publish when neither vsce nor ovsx personal access token is configured', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
