@@ -9,11 +9,11 @@
 [![peerDependencies](https://david-dm.org/felipecrs/semantic-release-vsce/peer-status.svg)](https://david-dm.org/felipecrs/semantic-release-vsce?type=peer)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-| Step      | Description                                                                                                                                                                                                          |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify`  | Verify the presence and the validity of the authentication (set via [environment variables](#environment-variables)) and the `package.json`                                                                          |
-| `prepare` | Generate the `.vsix` file using vsce, this can be be controlled by providing `packageVsix` in config. <br/> _Note: If the `OVSX_PAT` environment variable is set, this step will run even if not explicitly enabled_ |
-| `publish` | Publish the extension                                                                                                                                                                                                |
+| Step      | Description                                                                                                                                                 |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`  | Verify the `package.json` and the validity of the personal access tokens against Visual Studio Marketplace and/or Open VSX Registry when publish is enabled |
+| `prepare` | Generate the `.vsix` file using `vsce` (can be be controlled by the [`packageVsix` config option](#packagevsix)                                             |
+| `publish` | Publish the extension to Visual Studio Marketplace and/or Open VSX Registry (learn more [here](#publishing))                                                |
 
 ## Install
 
@@ -60,7 +60,7 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
 
 ### `packageVsix`
 
-Whether to package or not the extension `.vsix`, or where to place it. This controls if `vsce package` gets called or not, and what value will be used for `vsce package --out`.
+Whether to package or not the extension into a `.vsix` file, or where to place it. This controls if `vsce package` gets called or not, and what value will be used for `vsce package --out`.
 
 | Value              | Description                                                                                                  |
 | ------------------ | ------------------------------------------------------------------------------------------------------------ |
@@ -71,12 +71,12 @@ Whether to package or not the extension `.vsix`, or where to place it. This cont
 
 ### `publish`
 
-Whether to publish or not the extension to Visual Studio Marketplace or OpenVSX (if the `OVSX_PAT` environment variable is present). This controls if `vsce publish` or `ovsx publish` (if the `OVSX_PAT` environment variable is present) gets called or not.
+Whether to publish or not the extension to Visual Studio Marketplace and/or to Open VSX Registry. This controls if `vsce publish` or `ovsx publish` gets called or not. Learn more [here](#publishing).
 
-| Value            | Description                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| `true` (default) | publishes the extension to Visual Studio Marketplace           |
-| `false`          | disables publishing the extension to Visual Studio Marketplace |
+| Value            | Description                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| `true` (default) | publishes the extension to Visual Studio Marketplace and/or to Open VSX Registry           |
+| `false`          | disables publishing the extension to Visual Studio Marketplace and/or to Open VSX Registry |
 
 ### `publishPackagePath`
 
@@ -90,11 +90,13 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 
 ### Environment variables
 
+The following environment variables are supported by this plugin:
+
 | Variable      | Description                                                                                                                                                                                                                                                                                                     |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OVSX_PAT`    | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
 | `VSCE_PAT`    | _Optional_. The personal access token to publish to Visual Studio Marketplace                                                                                                                                                                                                                                   |
 | `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
-| `OVSX_PAT`    | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
 
 ### Configuring `vsce`
 
@@ -113,15 +115,35 @@ You can set `vsce` options in the `package.json`, like:
 
 For more information, check the [`vsce` docs](https://github.com/microsoft/vscode-vsce#configuration).
 
-### Publishing to OpenVSX
+## Publishing
 
-Publishing extensions to OpenVSX using this plugin is easy:
+This plugin can publish extensions to Visual Studio Marketplace and/or Open VSX Registry.
 
-1. Get a valid personal access token with the correct privileges to the publisher namespace in OpenVSX. In order to get the personal access token, check this [page](https://github.com/eclipse/openvsx/wiki).
+You can enable or disable publishing with the [`publish`](#publish) config option.
+
+When publish is enabled (default), the plugin will publish to Visual Studio Marketplace if the `VSCE_PAT` environment variable is present, and/or to Open VSX Registry if the `OVSX_PAT` environment variable is present.
+
+For example, you may want to disable publishing if you only want to publish the `.vsix` file as a GitHub release asset.
+
+### Publishing to Visual Studio Marketplace
+
+Publishing extensions to Visual Studio Marketplace using this plugin is easy:
+
+1. Create your personal access token for Visual Studio Marketplace. Learn more [here](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token).
+
+2. Configure the `VSCE_PAT` environment variable in your CI with the token that you created.
+
+3. Enjoy! The plugin will automatically detect the environment variable and it will publish to Visual Studio Marketplace, no additional configuration is needed.
+
+### Publishing to Open VSX Registry
+
+Publishing extensions to Open VSX Registry using this plugin is easy:
+
+1. Create your personal access token for Open VSX Registry. Learn more [here](https://github.com/eclipse/openvsx/wiki).
 
 2. Configure the `OVSX_PAT` environment variable in your CI with the token that you created.
 
-3. Enjoy! The plugin will automatically detect the environment variable and it will publish to OpenVSX, no additional configuration is needed.
+3. Enjoy! The plugin will automatically detect the environment variable and it will publish to Open VSX Registry, no additional configuration is needed.
 
 ## Examples
 
@@ -146,8 +168,9 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # In case you want to publish to Visual Studio Marketplace
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # In case you want to publish to OpenVSX
+          # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 ```
 
@@ -277,8 +300,9 @@ jobs:
           VSCE_TARGET: ${{ matrix.target }}
           # All tokens are required since semantic-release needs to validate them
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # In case you want to publish to Visual Studio Marketplace
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # In case you want to publish to OpenVSX
+          # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 
       - uses: actions/upload-artifact@v3
@@ -303,8 +327,9 @@ jobs:
       - run: npx semantic-release --extends ./publish.release.config.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # In case you want to publish to Visual Studio Marketplace
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # In case you want to publish to OpenVSX
+          # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 ```
 

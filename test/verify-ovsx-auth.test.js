@@ -5,19 +5,6 @@ const SemanticReleaseError = require('@semantic-release/error');
 
 const cwd = process.cwd();
 
-test('OVSX_PAT is not set', async (t) => {
-  const logger = {
-    log: sinon.fake(),
-  };
-
-  sinon.stub(process, 'env').value({});
-
-  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
-  const error = await t.throwsAsync(verifyOvsxAuth(logger));
-  t.deepEqual(error.code, 'ENOOVSXPAT');
-  t.true(logger.log.calledOnce);
-});
-
 test('OVSX_PAT is set', async (t) => {
   const logger = {
     log: sinon.fake(),
@@ -51,7 +38,7 @@ test('OVSX_PAT is invalid', async (t) => {
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
-    code: 'EINVALIDOVSXPAT',
+    code: 'EEMPTYOVSXPAT',
   });
 });
 

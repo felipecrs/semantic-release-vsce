@@ -23,14 +23,6 @@ test('VSCE_PAT is set', async (t) => {
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
-test('VSCE_PAT is not set', async (t) => {
-  sinon.stub(process, 'env').value({});
-
-  const verifyVsceAuth = require('../lib/verify-vsce-auth');
-  const error = await t.throwsAsync(verifyVsceAuth(logger));
-  t.deepEqual(error.code, 'ENOVSCEPAT');
-});
-
 test('VSCE_PAT is valid', async (t) => {
   sinon.stub(process, 'env').value({
     VSCE_PAT: 'abc123',
@@ -59,7 +51,7 @@ test('VSCE_PAT is invalid', async (t) => {
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
-    code: 'EINVALIDVSCEPAT',
+    code: 'EEMPTYVSCEPAT',
   });
 });
 
