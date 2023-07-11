@@ -1,4 +1,4 @@
-const test = require('ava');
+const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 
@@ -172,6 +172,32 @@ test('it does not publish the package if publishing is disabled', async (t) => {
   await publish({ ...pluginConfig, publish: false }, semanticReleasePayload);
 
   t.true(vscePublishStub.notCalled);
+});
+
+test('it can publish when `OVSX_PAT` is present but `VSCE_PAT` is missing', async (t) => {
+  const token = 'abc123';
+  sinon.stub(process, 'env').value({
+    OVSX_PAT: token,
+  });
+  const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
+  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
+    './lib/verify': verifyVsceStub,
+    './lib/publish': vscePublishStub,
+    './lib/prepare': vscePrepareStub,
+  });
+
+  await verifyConditions({ ...pluginConfig }, semanticReleasePayload);
+  await prepare({ ...pluginConfig }, semanticReleasePayload);
+  await publish({ ...pluginConfig }, semanticReleasePayload);
+
+  t.true(verifyVsceStub.calledOnce);
+  t.true(vscePrepareStub.calledOnce);
+  t.deepEqual(vscePublishStub.getCall(0).args, [
+    semanticReleasePayload.nextRelease.version,
+    undefined,
+    semanticReleasePayload.logger,
+    semanticReleasePayload.cwd,
+  ]);
 });
 
 test('expand globs if publishPackagePath is set', async (t) => {

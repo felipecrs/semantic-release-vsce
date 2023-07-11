@@ -1,20 +1,9 @@
-const test = require('ava');
+const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const SemanticReleaseError = require('@semantic-release/error');
 
 const cwd = process.cwd();
-
-test('OVSX_PAT is not set', async (t) => {
-  const logger = {
-    log: sinon.fake(),
-  };
-
-  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
-
-  await t.notThrowsAsync(() => verifyOvsxAuth(logger));
-  t.true(logger.log.calledTwice);
-});
 
 test('OVSX_PAT is set', async (t) => {
   const logger = {
@@ -49,7 +38,7 @@ test('OVSX_PAT is invalid', async (t) => {
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
-    code: 'EINVALIDOVSXPAT',
+    code: 'EEMPTYOVSXPAT',
   });
 });
 

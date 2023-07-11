@@ -193,3 +193,61 @@ test('publish to OpenVSX', async (t) => {
     { stdio: 'inherit', preferLocal: true, cwd },
   ]);
 });
+
+test('publish to OpenVSX only', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  const token = 'abc123';
+  sinon.stub(process, 'env').value({
+    OVSX_PAT: token,
+  });
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Open VSX Registry',
+    url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`,
+  });
+  t.true(execaStub.calledOnce);
+  t.deepEqual(execaStub.getCall(0).args, [
+    'ovsx',
+    ['publish', '--packagePath', packagePath],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
+});
+
+test('should not publish when neither vsce nor ovsx personal access token is configured', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  sinon.stub(process, 'env').value({});
+
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.falsy(result);
+  t.true(execaStub.notCalled);
+});
