@@ -1,4 +1,4 @@
-const test = require('ava');
+const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
 const SemanticReleaseError = require('@semantic-release/error');
@@ -10,10 +10,12 @@ test('OVSX_PAT is not set', async (t) => {
     log: sinon.fake(),
   };
 
-  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
+  sinon.stub(process, 'env').value({});
 
-  await t.notThrowsAsync(() => verifyOvsxAuth(logger));
-  t.true(logger.log.calledTwice);
+  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
+  const error = await t.throwsAsync(verifyOvsxAuth(logger));
+  t.deepEqual(error.code, 'ENOOVSXPAT');
+  t.true(logger.log.calledOnce);
 });
 
 test('OVSX_PAT is set', async (t) => {

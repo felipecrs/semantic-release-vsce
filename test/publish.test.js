@@ -228,7 +228,7 @@ test('publish to OpenVSX only', async (t) => {
   ]);
 });
 
-test('errors when neither `VSCE_PAT` nor `OVSX_PAT` set', async (t) => {
+test('should be not publish when neither vsce not ovsx personal access is configured', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
@@ -246,6 +246,8 @@ test('errors when neither `VSCE_PAT` nor `OVSX_PAT` set', async (t) => {
   const packagePath = 'test.vsix';
   sinon.stub(process, 'env').value({});
 
-  const error = await t.throwsAsync(publish(version, packagePath, logger, cwd));
-  t.deepEqual(error.code, 'ENOPAT');
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.falsy(result);
+  t.true(execaStub.notCalled);
 });
