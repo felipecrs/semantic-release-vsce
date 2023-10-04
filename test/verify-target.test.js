@@ -1,6 +1,7 @@
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
+const SemanticReleaseError = require('@semantic-release/error');
 
 test('VSCE_TARGET is not set', async (t) => {
   const vscePackage = sinon.stub().returns({
@@ -35,6 +36,7 @@ test('VSCE_TARGET is empty', async (t) => {
   });
 
   await t.throwsAsync(() => verifyTarget(), {
+    instanceOf: SemanticReleaseError,
     code: 'EINVALIDVSCETARGET',
   });
   t.false(vscePackage.called);
@@ -47,6 +49,7 @@ test('VSCE_TARGET is unsupported', async (t) => {
   const verifyTarget = require('../lib/verify-target');
 
   await t.throwsAsync(() => verifyTarget(), {
+    instanceOf: SemanticReleaseError,
     code: 'EUNSUPPORTEDVSCETARGET',
   });
 });

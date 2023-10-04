@@ -1,6 +1,7 @@
 const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
+const SemanticReleaseError = require('@semantic-release/error');
 
 const cwd = process.cwd();
 
@@ -36,6 +37,7 @@ test('OVSX_PAT is invalid', async (t) => {
   const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
+    instanceOf: SemanticReleaseError,
     code: 'EEMPTYOVSXPAT',
   });
 });
@@ -52,6 +54,7 @@ test('OVSX_PAT is invalid but not empty', async (t) => {
   const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
+    instanceOf: SemanticReleaseError,
     code: 'EINVALIDOVSXPAT',
   });
 });
