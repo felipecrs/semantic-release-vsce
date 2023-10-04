@@ -47,7 +47,7 @@
     "npm": "9.8.1"
   },
   "dependencies": {
-    "@semantic-release/error": "^4.0.0",
+    "@semantic-release/error": "^3.0.0",
     "@vscode/vsce": "^2.15.0",
     "execa": "^5.0.0",
     "fs-extra": "^11.1.0",

@@ -1,3 +1,4 @@
+const SemanticReleaseError = require('@semantic-release/error');
 const test = require('ava');
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
@@ -106,9 +107,7 @@ test('errors when neither vsce nor ovsx personal access token is configured', as
   });
 
   await t.throwsAsync(() => verify({}, { logger, cwd }), {
-    // TODO: restore all instanceOf checks like the below when we finally
-    // upgrade to ES Modules.
-    // instanceOf: SemanticReleaseError,
+    instanceOf: SemanticReleaseError,
     code: 'ENOPAT',
   });
   t.true(stubs.verifyVsceAuthStub.notCalled);
