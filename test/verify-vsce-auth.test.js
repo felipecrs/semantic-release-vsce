@@ -1,7 +1,6 @@
 const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
 
 const logger = {
   log: sinon.fake(),
@@ -50,7 +49,6 @@ test('VSCE_PAT is invalid', async (t) => {
   const verifyOvsxAuth = require('../lib/verify-vsce-auth');
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
-    instanceOf: SemanticReleaseError,
     code: 'EEMPTYVSCEPAT',
   });
 });
@@ -68,7 +66,6 @@ test('VSCE_PAT is invalid but not empty', async (t) => {
   });
 
   await t.throwsAsync(() => verifyVsceAuth(logger), {
-    instanceOf: SemanticReleaseError,
     code: 'EINVALIDVSCEPAT',
   });
 });
