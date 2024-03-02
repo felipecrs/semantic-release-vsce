@@ -1,5 +1,4 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# shellcheck shell=sh
 
 npx lint-staged
 npm test
