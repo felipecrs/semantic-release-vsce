@@ -102,8 +102,7 @@ The following environment variables are supported by this plugin:
 
 You can set `vsce` options in the `package.json`, like:
 
-```jsonc
-// package.json
+```json
 {
   "vsce": {
     "baseImagesUrl": "https://my.custom/base/images/url",
