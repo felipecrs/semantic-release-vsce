@@ -88,6 +88,10 @@ Which `.vsix` file (or files) to publish. This controls what value will be used 
 | `false`            | do not use a `.vsix` file to publish, which causes `vsce` to package the extension as part of the publish process |
 | a `string`         | publish the specified `.vsix` file(s). This can be a glob pattern, or a comma-separated list of files             |
 
+### `packageRoot`
+
+The directory of the extension relative to the current working directory. Defaults to `cwd`.
+
 ### Environment variables
 
 The following environment variables are supported by this plugin:
