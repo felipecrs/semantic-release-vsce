@@ -3,6 +3,8 @@ const test = require('ava');
 const proxyquire = require('proxyquire');
 const SemanticReleaseError = require('@semantic-release/error');
 
+const cwd = process.cwd();
+
 test('package.json is found', async (t) => {
   const name = 'test';
   const publisher = 'tester';
@@ -19,7 +21,7 @@ test('package.json is found', async (t) => {
     },
   });
 
-  await t.notThrowsAsync(() => verifyPkg());
+  await t.notThrowsAsync(() => verifyPkg(cwd));
 });
 
 test('package.json is not found', async (t) => {
@@ -38,7 +40,7 @@ test('package.json is not found', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(), {
+  await t.throwsAsync(() => verifyPkg(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPKG',
   });
@@ -59,7 +61,7 @@ test('package is valid', async (t) => {
     },
   });
 
-  await t.notThrowsAsync(() => verifyPkg());
+  await t.notThrowsAsync(() => verifyPkg(cwd));
 });
 
 test('package is invalid', async (t) => {
@@ -72,7 +74,7 @@ test('package is invalid', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(), {
+  await t.throwsAsync(() => verifyPkg(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'EINVALIDPKG',
   });
@@ -91,7 +93,7 @@ test('package is missing name', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(), {
+  await t.throwsAsync(() => verifyPkg(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPKGNAME',
   });
@@ -110,7 +112,7 @@ test('package is missing publisher', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(), {
+  await t.throwsAsync(() => verifyPkg(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPUBLISHER',
   });

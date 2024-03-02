@@ -1,5 +1,6 @@
 // @ts-check
 
+const path = require('path');
 const verifyVsce = require('./lib/verify');
 const vscePublish = require('./lib/publish');
 const vscePrepare = require('./lib/prepare');
@@ -9,6 +10,7 @@ let prepared = false;
 let packagePath;
 
 async function verifyConditions(pluginConfig, { logger, cwd }) {
+  cwd = getPackageRoot(pluginConfig, cwd);
   await verifyVsce(pluginConfig, { logger, cwd });
   verified = true;
 }
@@ -17,6 +19,7 @@ async function prepare(
   pluginConfig,
   { nextRelease: { version }, logger, cwd },
 ) {
+  cwd = getPackageRoot(pluginConfig, cwd);
   if (!verified) {
     await verifyVsce(pluginConfig, { logger, cwd });
     verified = true;
@@ -34,6 +37,7 @@ async function publish(
   pluginConfig,
   { nextRelease: { version }, logger, cwd },
 ) {
+  cwd = getPackageRoot(pluginConfig, cwd);
   if (!verified) {
     await verifyVsce(pluginConfig, { logger, cwd });
     verified = true;
@@ -61,6 +65,12 @@ async function publish(
   }
 
   return vscePublish(version, packagePath, logger, cwd);
+}
+
+function getPackageRoot(pluginConfig, cwd) {
+  return pluginConfig.packageRoot
+    ? path.join(cwd, pluginConfig.packageRoot)
+    : cwd;
 }
 
 module.exports = {

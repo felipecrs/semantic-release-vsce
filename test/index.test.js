@@ -229,3 +229,33 @@ test('expand globs if publishPackagePath is set', async (t) => {
     semanticReleasePayload.cwd,
   ]);
 });
+
+test('publishes an extension in a non-root folder', async (t) => {
+  const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
+  const { publish } = proxyquire('../index.js', {
+    './lib/verify': verifyVsceStub,
+    './lib/publish': vscePublishStub,
+    './lib/prepare': vscePrepareStub,
+    glob: {
+      glob: {
+        sync: sinon.stub().returns(['package1.vsix', 'package2.vsix']),
+      },
+    },
+  });
+
+  const pluginConfig = {
+    packageRoot: './vscode-extension',
+  };
+  const resolvedCwd = `${semanticReleasePayload.cwd}/vscode-extension`;
+
+  await publish(pluginConfig, semanticReleasePayload);
+
+  t.true(verifyVsceStub.calledOnce);
+  t.true(vscePrepareStub.calledOnce);
+  t.deepEqual(vscePublishStub.getCall(0).args, [
+    semanticReleasePayload.nextRelease.version,
+    undefined,
+    semanticReleasePayload.logger,
+    resolvedCwd,
+  ]);
+});
