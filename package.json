@@ -24,7 +24,7 @@
     "lint": "prettier --check . && eslint . ",
     "release": "semantic-release",
     "test": "nyc ava",
-    "posttest": "npm run lint && installed-check --engine-no-dev",
+    "posttest": "npm run lint && installed-check --ignore-dev",
     "prepare": "husky"
   },
   "ava": {
