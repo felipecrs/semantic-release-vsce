@@ -23,6 +23,24 @@ test('VSCE_PAT is set', async (t) => {
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
+test('VSCE_USE_AZURE_CREDENTIALS is set', async (t) => {
+  sinon.stub(process, 'env').value({
+    VSCE_USE_AZURE_CREDENTIALS: true,
+  });
+
+  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
+    execa: sinon
+      .stub()
+      .withArgs('vsce', ['--azure-credential', 'verify-pat'], {
+        preferLocal: true,
+        cwd,
+      })
+      .resolves(),
+  });
+
+  await t.notThrowsAsync(() => verifyVsceAuth(logger));
+});
+
 test('VSCE_PAT is valid', async (t) => {
   sinon.stub(process, 'env').value({
     VSCE_PAT: 'abc123',
@@ -38,7 +56,7 @@ test('VSCE_PAT is valid', async (t) => {
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
-test('VSCE_PAT is invalid', async (t) => {
+test('Neither VSCE_PAT or VSCE_USE_AZURE_CREDENTIALS are set', async (t) => {
   const logger = {
     log: sinon.fake(),
   };
@@ -51,7 +69,7 @@ test('VSCE_PAT is invalid', async (t) => {
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
-    code: 'EEMPTYVSCEPAT',
+    code: 'EVSCEAUTHNOTPROVIDED',
   });
 });
 
@@ -70,5 +88,24 @@ test('VSCE_PAT is invalid but not empty', async (t) => {
   await t.throwsAsync(() => verifyVsceAuth(logger), {
     instanceOf: SemanticReleaseError,
     code: 'EINVALIDVSCEPAT',
+  });
+});
+
+test('Both VSCE_PAT and VSCE_USE_AZURE_CREDENTIALS set', async (t) => {
+  sinon.stub(process, 'env').value({
+    VSCE_PAT: 'abc123',
+    VSCE_USE_AZURE_CREDENTIALS: true,
+  });
+
+  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
+    execa: sinon
+      .stub()
+      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+      .rejects(),
+  });
+
+  await t.throwsAsync(() => verifyVsceAuth(logger), {
+    instanceOf: SemanticReleaseError,
+    code: 'EVSCEDUPLICATEAUTHPROVIDED',
   });
 });
