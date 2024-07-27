@@ -23,9 +23,9 @@ test('VSCE_PAT is set', async (t) => {
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
-test('VSCE_USE_AZURE_CREDENTIALS is set', async (t) => {
+test('VSCE_AZURE_CREDENTIALS is set', async (t) => {
   sinon.stub(process, 'env').value({
-    VSCE_USE_AZURE_CREDENTIALS: true,
+    VSCE_AZURE_CREDENTIALS: true,
   });
 
   const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
@@ -56,7 +56,7 @@ test('VSCE_PAT is valid', async (t) => {
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
-test('Neither VSCE_PAT or VSCE_USE_AZURE_CREDENTIALS are set', async (t) => {
+test('Neither VSCE_PAT or VSCE_AZURE_CREDENTIALS are set', async (t) => {
   const logger = {
     log: sinon.fake(),
   };
@@ -91,10 +91,10 @@ test('VSCE_PAT is invalid but not empty', async (t) => {
   });
 });
 
-test('Both VSCE_PAT and VSCE_USE_AZURE_CREDENTIALS set', async (t) => {
+test('Both VSCE_PAT and VSCE_AZURE_CREDENTIALS set', async (t) => {
   sinon.stub(process, 'env').value({
     VSCE_PAT: 'abc123',
-    VSCE_USE_AZURE_CREDENTIALS: true,
+    VSCE_AZURE_CREDENTIALS: true,
   });
 
   const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
