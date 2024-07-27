@@ -222,7 +222,7 @@ test('publish to VSCE with azure credentials', async (t) => {
   const args0 = execaStub.getCall(0).args;
   t.deepEqual(args0, [
     'vsce',
-    ['publish', '--azure-credential', '--packagePath', packagePath],
+    ['publish', '--packagePath', packagePath, '--azure-credential'],
     { stdio: 'inherit', preferLocal: true, cwd },
   ]);
 });

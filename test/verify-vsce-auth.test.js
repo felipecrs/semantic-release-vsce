@@ -31,7 +31,7 @@ test('VSCE_AZURE_CREDENTIALS is set', async (t) => {
   const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
     execa: sinon
       .stub()
-      .withArgs('vsce', ['--azure-credential', 'verify-pat'], {
+      .withArgs('vsce', ['verify-pat', '--azure-credential'], {
         preferLocal: true,
         cwd,
       })
