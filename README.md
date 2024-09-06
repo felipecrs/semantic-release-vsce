@@ -96,12 +96,12 @@ The directory of the extension relative to the current working directory. Defaul
 
 The following environment variables are supported by this plugin:
 
-| Variable                 | Description                                                                                                                                                                                                                                                                                                     |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OVSX_PAT`               | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
-| `VSCE_PAT`               | _Optional_. The personal access token to publish to Visual Studio Marketplace. _Note:_ Cannot be set at the same time as `VSCE_AZURE_CREDENTIALS`.                                                                                                                                                              |
-| `VSCE_AZURE_CREDENTIALS` | _Optional_. When set `vsce` will use the `--azure-credential` flag to authenticate. _Note:_ Cannot be set at the same time as `VSCE_PAT`                                                                                                                                                                        |
-| `VSCE_TARGET`            | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
+| Variable                | Description                                                                                                                                                                                                                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OVSX_PAT`              | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
+| `VSCE_PAT`              | _Optional_. The personal access token to publish to Visual Studio Marketplace. _Note:_ Cannot be set at the same time as `VSCE_AZURE_CREDENTIAL`.                                                                                                                                                               |
+| `VSCE_AZURE_CREDENTIAL` | _Optional_. When set `vsce` will use the `--azure-credential` flag to authenticate. _Note:_ Cannot be set at the same time as `VSCE_PAT`                                                                                                                                                                        |
+| `VSCE_TARGET`           | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
 
 ### Configuring `vsce`
 
@@ -172,10 +172,10 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # In case you want to publish to Visual Studio Marketplace.  Remove if using VSCE_AZURE_CREDENTIALS
+          # In case you want to publish to Visual Studio Marketplace.  Remove if using VSCE_AZURE_CREDENTIAL
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # Set in order to publish to Visual Studio Marketplace using Azure CLI credentials
-          #VSCE_AZURE_CREDENTIALS: true
+          #VSCE_AZURE_CREDENTIAL: true
           # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 ```
@@ -366,7 +366,7 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VSCE_AZURE_CREDENTIALS: true
+          VSCE_AZURE_CREDENTIAL: true
 ```
 
 A reference implementation can also be found in the [VS Code ShellCheck extension](https://github.com/vscode-shellcheck/vscode-shellcheck/pull/805).

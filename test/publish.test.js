@@ -211,7 +211,7 @@ test('publish to VSCE with azure credentials', async (t) => {
   const version = '1.0.0';
   const packagePath = 'test.vsix';
   sinon.stub(process, 'env').value({
-    VSCE_AZURE_CREDENTIALS: true,
+    VSCE_AZURE_CREDENTIAL: true,
   });
   const result = await publish(version, packagePath, logger, cwd);
 
