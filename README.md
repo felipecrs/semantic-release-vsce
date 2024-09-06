@@ -174,8 +174,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # In case you want to publish to Visual Studio Marketplace.  Remove if using VSCE_AZURE_CREDENTIAL
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # Set in order to publish to Visual Studio Marketplace using Azure CLI credentials
-          #VSCE_AZURE_CREDENTIAL: true
           # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 ```
