@@ -4,7 +4,7 @@
   "description": "semantic-release plugin to package and publish VS Code extensions",
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": "20 || >=22"
   },
   "repository": "https://github.com/felipecrs/semantic-release-vsce.git",
   "bugs": "https://github.com/felipecrs/semantic-release-vsce/issues",
@@ -42,16 +42,16 @@
     ]
   },
   "volta": {
-    "node": "20.16.0",
-    "npm": "10.8.2"
+    "node": "20.18.0",
+    "npm": "10.9.0"
   },
   "dependencies": {
     "@semantic-release/error": "^3.0.0",
-    "@vscode/vsce": "^2.15.0",
+    "@vscode/vsce": "^3.0.0",
     "execa": "^5.0.0",
     "fs-extra": "^11.1.0",
     "glob": "^10.2.1",
-    "ovsx": "^0.9.2"
+    "ovsx": "^0.10.0"
   },
   "peerDependencies": {
     "semantic-release": ">=18"
