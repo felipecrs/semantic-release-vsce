@@ -33,6 +33,9 @@ jobs:
 
     needs: test
 
+    permissions:
+      id-token: write # for npm provenance
+
     steps:
       - uses: actions/checkout@v4
       - uses: volta-cli/action@v4

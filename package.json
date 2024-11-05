@@ -72,5 +72,8 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "publishConfig": {
+    "provenance": true
   }
 }
