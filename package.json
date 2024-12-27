@@ -21,6 +21,9 @@
     "vsce"
   ],
   "main": "index.js",
+  "files": [
+    "lib/**/*.js"
+  ],
   "scripts": {
     "lint": "prettier --check . && eslint . && installed-check --ignore-dev",
     "test": "c8 ava",
