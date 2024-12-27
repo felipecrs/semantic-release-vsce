@@ -96,11 +96,12 @@ The directory of the extension relative to the current working directory. Defaul
 
 The following environment variables are supported by this plugin:
 
-| Variable      | Description                                                                                                                                                                                                                                                                                                     |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OVSX_PAT`    | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
-| `VSCE_PAT`    | _Optional_. The personal access token to publish to Visual Studio Marketplace                                                                                                                                                                                                                                   |
-| `VSCE_TARGET` | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
+| Variable                | Description                                                                                                                                                                                                                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OVSX_PAT`              | _Optional_. The personal access token to push to Open VSX Registry                                                                                                                                                                                                                                              |
+| `VSCE_PAT`              | _Optional_. The personal access token to publish to Visual Studio Marketplace. _Note:_ Cannot be set at the same time as `VSCE_AZURE_CREDENTIAL`.                                                                                                                                                               |
+| `VSCE_AZURE_CREDENTIAL` | _Optional_. When set to `true` or `1`, `vsce` will use the `--azure-credential` flag to authenticate. _Note:_ Cannot be set at the same time as `VSCE_PAT`.                                                                                                                                                     |
+| `VSCE_TARGET`           | _Optional_. The target to use when packaging or publishing the extension (used as `vsce package --target ${VSCE_TARGET}`). When set to `universal`, behave as if `VSCE_TARGET` was not set (i.e. build the universal/generic `vsix`). See [the platform-specific example](#platform-specific-on-github-actions) |
 
 ### Configuring `vsce`
 
@@ -331,6 +332,39 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
+```
+
+### GitHub Actions - Release to VS Marketplace with Azure credentials
+
+```yaml
+name: release
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+
+      # Log into Azure CLI to get VSCE credentials
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VSCE_AZURE_CREDENTIAL: 'true'
 ```
 
 A reference implementation can also be found in the [VS Code ShellCheck extension](https://github.com/vscode-shellcheck/vscode-shellcheck/pull/805).

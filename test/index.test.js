@@ -1,6 +1,7 @@
 const test = require('ava').serial;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
+const path = require('path');
 
 const semanticReleasePayload = {
   nextRelease: {
@@ -246,7 +247,9 @@ test('publishes an extension in a non-root folder', async (t) => {
   const pluginConfig = {
     packageRoot: './vscode-extension',
   };
-  const resolvedCwd = `${semanticReleasePayload.cwd}/vscode-extension`;
+  const resolvedCwd = path.resolve(
+    `${semanticReleasePayload.cwd}/vscode-extension`,
+  );
 
   await publish(pluginConfig, semanticReleasePayload);
 
