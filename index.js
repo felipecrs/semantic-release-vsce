@@ -60,7 +60,7 @@ export async function publish(
 
   if (pluginConfig?.publishPackagePath) {
     // Expand glob
-    const { glob } = await import('glob');
+    const glob = (await import('glob')).glob;
     packagePath = await glob(pluginConfig.publishPackagePath, { cwd });
   }
 

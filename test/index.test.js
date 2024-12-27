@@ -251,10 +251,9 @@ test('it can publish when `OVSX_PAT` is present but `VSCE_PAT` is missing', asyn
   ]);
 });
 
-// TODO: Fix glob mock
-test.skip('expand globs if publishPackagePath is set', async (t) => {
+test('expand globs if publishPackagePath is set', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = await esmock('../index.js', {
+  const { publish } = await esmock.p('../index.js', {
     '../lib/verify.js': {
       verify: verifyVsceStub,
     },
@@ -286,10 +285,9 @@ test.skip('expand globs if publishPackagePath is set', async (t) => {
   ]);
 });
 
-// TODO: Fix glob mock
-test.skip('publishes an extension in a non-root folder', async (t) => {
+test('publishes an extension in a non-root folder', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = await esmock('../index.js', {
+  const { publish } = await esmock.p('../index.js', {
     '../lib/verify.js': {
       verify: verifyVsceStub,
     },
