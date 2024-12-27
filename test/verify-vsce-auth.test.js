@@ -1,70 +1,76 @@
-const test = require('ava').serial;
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
+import avaTest from 'ava';
+import { fake, stub } from 'sinon';
+import esmock from 'esmock';
+import SemanticReleaseError from '@semantic-release/error';
+
+// Run tests serially to avoid env pollution
+const test = avaTest.serial;
 
 const logger = {
-  log: sinon.fake(),
+  log: fake(),
 };
 const cwd = process.cwd();
 
 test('VSCE_PAT is set', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: 'abc123',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
-      .resolves(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
 test('VSCE_AZURE_CREDENTIAL is set to true', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_AZURE_CREDENTIAL: 'true',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat', '--azure-credential'], {
-        preferLocal: true,
-        cwd,
-      })
-      .resolves(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat', '--azure-credential'], {
+          preferLocal: true,
+          cwd,
+        })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
 test('VSCE_AZURE_CREDENTIAL is set to 1', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_AZURE_CREDENTIAL: '1',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat', '--azure-credential'], {
-        preferLocal: true,
-        cwd,
-      })
-      .resolves(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat', '--azure-credential'], {
+          preferLocal: true,
+          cwd,
+        })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
 test('VSCE_AZURE_CREDENTIAL is set to false', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_AZURE_CREDENTIAL: 'false',
   });
 
-  const verifyVsceAuth = require('../lib/verify-vsce-auth');
+  const { verifyVsceAuth } = await import('../lib/verify-vsce-auth.js');
 
   await t.throwsAsync(() => verifyVsceAuth(logger), {
     instanceOf: SemanticReleaseError,
@@ -73,31 +79,33 @@ test('VSCE_AZURE_CREDENTIAL is set to false', async (t) => {
 });
 
 test('VSCE_PAT is valid', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: 'abc123',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
-      .resolves(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
 });
 
 test('VSCE_PAT is valid and VSCE_AZURE_CREDENTIAL=false', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: 'abc123',
     VSCE_AZURE_CREDENTIAL: 'false',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
-      .resolves(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyVsceAuth(logger));
@@ -105,14 +113,14 @@ test('VSCE_PAT is valid and VSCE_AZURE_CREDENTIAL=false', async (t) => {
 
 test('Neither VSCE_PAT or VSCE_AZURE_CREDENTIAL are set', async (t) => {
   const logger = {
-    log: sinon.fake(),
+    log: fake(),
   };
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: '',
   });
 
-  const verifyVsceAuth = require('../lib/verify-vsce-auth');
+  const { verifyVsceAuth } = await import('../lib/verify-vsce-auth.js');
 
   await t.throwsAsync(() => verifyVsceAuth(logger), {
     instanceOf: SemanticReleaseError,
@@ -121,15 +129,16 @@ test('Neither VSCE_PAT or VSCE_AZURE_CREDENTIAL are set', async (t) => {
 });
 
 test('VSCE_PAT is invalid but not empty', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: 'abc123',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
-      .rejects(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .rejects(),
+    },
   });
 
   await t.throwsAsync(() => verifyVsceAuth(logger), {
@@ -139,16 +148,17 @@ test('VSCE_PAT is invalid but not empty', async (t) => {
 });
 
 test('Both VSCE_PAT and VSCE_AZURE_CREDENTIAL are set', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_PAT: 'abc123',
     VSCE_AZURE_CREDENTIAL: 'true',
   });
 
-  const verifyVsceAuth = proxyquire('../lib/verify-vsce-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
-      .rejects(),
+  const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .rejects(),
+    },
   });
 
   await t.throwsAsync(() => verifyVsceAuth(logger), {

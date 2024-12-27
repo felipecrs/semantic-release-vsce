@@ -1,16 +1,19 @@
+import avaTest from 'ava';
+import { fake, stub } from 'sinon';
+import esmock from 'esmock';
+import process from 'node:process';
+
 // Run tests serially to avoid env pollution
-const test = require('ava').serial;
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
+const test = avaTest.serial;
 
 const logger = {
-  log: sinon.fake(),
+  log: fake(),
 };
 const cwd = process.cwd();
 
 test.beforeEach((t) => {
   t.context.stubs = {
-    execaStub: sinon.stub(),
+    execaStub: stub().resolves(),
   };
 });
 
@@ -20,8 +23,10 @@ test.afterEach((t) => {
 
 test('packageVsix is disabled', async (t) => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
   });
 
   const version = '1.0.0';
@@ -32,8 +37,10 @@ test('packageVsix is disabled', async (t) => {
 
 test('packageVsix is not specified', async (t) => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
   });
 
   const version = '1.0.0';
@@ -44,8 +51,10 @@ test('packageVsix is not specified', async (t) => {
 
 test('packageVsix is a string', async (t) => {
   const { execaStub } = t.context.stubs;
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
   });
 
   const version = '1.0.0';
@@ -65,10 +74,12 @@ test('packageVsix is true', async (t) => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
         name,
       }),
     },
@@ -92,16 +103,18 @@ test('packageVsix is not set but OVSX_PAT is', async (t) => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
         name,
       }),
     },
   });
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: 'abc123',
   });
 
@@ -123,20 +136,24 @@ test('packageVsix when target is set', async (t) => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const target = 'linux-x64';
+
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
         name,
       }),
     },
   });
 
   const version = '1.0.0';
-  const target = 'linux-x64';
+
   const packagePath = `${name}-${target}-${version}.vsix`;
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: target,
   });
 
@@ -162,10 +179,12 @@ test('packageVsix when target is set to universal', async (t) => {
   const { execaStub } = t.context.stubs;
   const name = 'test';
 
-  const prepare = proxyquire('../lib/prepare', {
-    execa: execaStub,
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { prepare } = await esmock('../lib/prepare.js', {
+    execa: {
+      execa: execaStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
         name,
       }),
     },
@@ -174,7 +193,7 @@ test('packageVsix when target is set to universal', async (t) => {
   const version = '1.0.0';
   const packagePath = `${name}-${version}.vsix`;
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: 'universal',
   });
 
