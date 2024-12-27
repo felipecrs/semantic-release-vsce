@@ -1,14 +1,17 @@
-const test = require('ava').serial;
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
-const path = require('path');
+import avaTest from 'ava';
+import esmock from 'esmock';
+import { resolve } from 'path';
+import { fake, stub } from 'sinon';
+
+// Run tests serially to avoid env pollution
+const test = avaTest.serial;
 
 const semanticReleasePayload = {
   nextRelease: {
     version: '1.0.0',
   },
   logger: {
-    log: sinon.fake(),
+    log: fake(),
   },
   cwd: process.cwd(),
 };
@@ -19,9 +22,9 @@ const pluginConfig = {
 
 test.beforeEach((t) => {
   t.context.stubs = {
-    verifyVsceStub: sinon.stub().resolves(),
-    vscePublishStub: sinon.stub().resolves(),
-    vscePrepareStub: sinon.stub().resolves(),
+    verifyVsceStub: stub().resolves(),
+    vscePublishStub: stub().resolves(),
+    vscePrepareStub: stub().resolves(),
   };
 });
 
@@ -33,10 +36,16 @@ test.afterEach((t) => {
 
 test('verifyConditions', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
@@ -51,11 +60,16 @@ test('verifyConditions', async (t) => {
 
 test('prepare and unverified', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
-    verified: false,
+  const { prepare } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await prepare(pluginConfig, semanticReleasePayload);
@@ -76,10 +90,16 @@ test('prepare and unverified', async (t) => {
 
 test('prepare and verified', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { prepare, verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
@@ -96,10 +116,16 @@ test('prepare and verified', async (t) => {
 
 test('publish that is unverified and unprepared', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { publish } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await publish(pluginConfig, semanticReleasePayload);
@@ -116,10 +142,16 @@ test('publish that is unverified and unprepared', async (t) => {
 
 test('publish that is verified but unprepared', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish, verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { publish, verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
@@ -137,10 +169,16 @@ test('publish that is verified but unprepared', async (t) => {
 
 test('publish that is already verified & prepared', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { prepare, publish, verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions(pluginConfig, semanticReleasePayload);
@@ -159,10 +197,16 @@ test('publish that is already verified & prepared', async (t) => {
 
 test('it does not publish the package if publishing is disabled', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { prepare, publish, verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions(
@@ -177,14 +221,20 @@ test('it does not publish the package if publishing is disabled', async (t) => {
 
 test('it can publish when `OVSX_PAT` is present but `VSCE_PAT` is missing', async (t) => {
   const token = 'abc123';
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: token,
   });
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { prepare, publish, verifyConditions } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { prepare, publish, verifyConditions } = await esmock('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
   });
 
   await verifyConditions({ ...pluginConfig }, semanticReleasePayload);
@@ -203,14 +253,18 @@ test('it can publish when `OVSX_PAT` is present but `VSCE_PAT` is missing', asyn
 
 test('expand globs if publishPackagePath is set', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { publish } = await esmock.p('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
     glob: {
-      glob: {
-        sync: sinon.stub().returns(['package1.vsix', 'package2.vsix']),
-      },
+      glob: stub().resolves(['package1.vsix', 'package2.vsix']),
     },
   });
 
@@ -233,23 +287,25 @@ test('expand globs if publishPackagePath is set', async (t) => {
 
 test('publishes an extension in a non-root folder', async (t) => {
   const { verifyVsceStub, vscePrepareStub, vscePublishStub } = t.context.stubs;
-  const { publish } = proxyquire('../index.js', {
-    './lib/verify': verifyVsceStub,
-    './lib/publish': vscePublishStub,
-    './lib/prepare': vscePrepareStub,
+  const { publish } = await esmock.p('../index.js', {
+    '../lib/verify.js': {
+      verify: verifyVsceStub,
+    },
+    '../lib/prepare.js': {
+      prepare: vscePrepareStub,
+    },
+    '../lib/publish.js': {
+      publish: vscePublishStub,
+    },
     glob: {
-      glob: {
-        sync: sinon.stub().returns(['package1.vsix', 'package2.vsix']),
-      },
+      glob: stub().resolves(['package1.vsix', 'package2.vsix']),
     },
   });
 
   const pluginConfig = {
     packageRoot: './vscode-extension',
   };
-  const resolvedCwd = path.resolve(
-    `${semanticReleasePayload.cwd}/vscode-extension`,
-  );
+  const resolvedCwd = resolve(`${semanticReleasePayload.cwd}/vscode-extension`);
 
   await publish(pluginConfig, semanticReleasePayload);
 

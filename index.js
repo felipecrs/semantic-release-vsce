@@ -1,27 +1,27 @@
 // @ts-check
 
-const path = require('path');
-const verifyVsce = require('./lib/verify');
-const vscePublish = require('./lib/publish');
-const vscePrepare = require('./lib/prepare');
+import { join } from 'node:path';
+import { prepare as vscePrepare } from './lib/prepare.js';
+import { publish as vscePublish } from './lib/publish.js';
+import { verify as vsceVerify } from './lib/verify.js';
 
 let verified = false;
 let prepared = false;
 let packagePath;
 
-async function verifyConditions(pluginConfig, { logger, cwd }) {
+export async function verifyConditions(pluginConfig, { logger, cwd }) {
   cwd = getPackageRoot(pluginConfig, cwd);
-  await verifyVsce(pluginConfig, { logger, cwd });
+  await vsceVerify(pluginConfig, { logger, cwd });
   verified = true;
 }
 
-async function prepare(
+export async function prepare(
   pluginConfig,
   { nextRelease: { version }, logger, cwd },
 ) {
   cwd = getPackageRoot(pluginConfig, cwd);
   if (!verified) {
-    await verifyVsce(pluginConfig, { logger, cwd });
+    await vsceVerify(pluginConfig, { logger, cwd });
     verified = true;
   }
   packagePath = await vscePrepare(
@@ -33,13 +33,13 @@ async function prepare(
   prepared = true;
 }
 
-async function publish(
+export async function publish(
   pluginConfig,
   { nextRelease: { version }, logger, cwd },
 ) {
   cwd = getPackageRoot(pluginConfig, cwd);
   if (!verified) {
-    await verifyVsce(pluginConfig, { logger, cwd });
+    await vsceVerify(pluginConfig, { logger, cwd });
     verified = true;
   }
 
@@ -60,21 +60,13 @@ async function publish(
 
   if (pluginConfig?.publishPackagePath) {
     // Expand glob
-    const globSync = require('glob').glob.sync;
-    packagePath = globSync(pluginConfig.publishPackagePath, { cwd });
+    const glob = (await import('glob')).glob;
+    packagePath = await glob(pluginConfig.publishPackagePath, { cwd });
   }
 
   return vscePublish(version, packagePath, logger, cwd);
 }
 
 function getPackageRoot(pluginConfig, cwd) {
-  return pluginConfig.packageRoot
-    ? path.join(cwd, pluginConfig.packageRoot)
-    : cwd;
+  return pluginConfig.packageRoot ? join(cwd, pluginConfig.packageRoot) : cwd;
 }
-
-module.exports = {
-  verifyConditions,
-  prepare,
-  publish,
-};

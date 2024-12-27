@@ -194,7 +194,10 @@ jobs:
 
    ```js
    // package.release.config.js
-   module.exports = {
+   /**
+    * @type {import('semantic-release').GlobalConfig}
+    */
+   export default {
      plugins: [
        '@semantic-release/commit-analyzer',
        '@semantic-release/release-notes-generator',
@@ -214,7 +217,10 @@ jobs:
 
    ```js
    // publish.release.config.js
-   module.exports = {
+   /**
+    * @type {import('semantic-release').GlobalConfig}
+    */
+   export default {
      plugins: [
        '@semantic-release/commit-analyzer',
        '@semantic-release/release-notes-generator',

@@ -1,37 +1,40 @@
-const sinon = require('sinon');
-const test = require('ava');
-const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
+import SemanticReleaseError from '@semantic-release/error';
+import avaTest from 'ava';
+import esmock from 'esmock';
+import { stub } from 'sinon';
+
+// Run tests serially to avoid env pollution
+const test = avaTest.serial;
 
 test('VSCE_TARGET is not set', async (t) => {
-  const vscePackage = sinon.stub().returns({
+  const vscePackage = stub().returns({
     Targets: new Map(),
   });
-  const verifyTarget = proxyquire('../lib/verify-target', {
-    'vsce/out/package': vscePackage,
+  const { verifyTarget } = await esmock('../lib/verify-target.js', {
+    '@vscode/vsce/out/package.js': vscePackage,
   });
 
   await t.notThrowsAsync(() => verifyTarget());
 });
 
 test('VSCE_TARGET is valid', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: 'linux-x64',
   });
 
-  const verifyTarget = require('../lib/verify-target');
+  const { verifyTarget } = await import('../lib/verify-target.js');
 
   await t.notThrowsAsync(() => verifyTarget());
 });
 
 test('VSCE_TARGET is empty', async (t) => {
-  const vscePackage = sinon.stub().returns({
+  const vscePackage = stub().returns({
     Targets: new Map(),
   });
-  const verifyTarget = proxyquire('../lib/verify-target', {
-    'vsce/out/package': vscePackage,
+  const { verifyTarget } = await esmock('../lib/verify-target.js', {
+    '@vscode/vsce/out/package.js': vscePackage,
   });
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: '',
   });
 
@@ -43,10 +46,10 @@ test('VSCE_TARGET is empty', async (t) => {
 });
 
 test('VSCE_TARGET is unsupported', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: 'whatever-x64',
   });
-  const verifyTarget = require('../lib/verify-target');
+  const { verifyTarget } = await import('../lib/verify-target.js');
 
   await t.throwsAsync(() => verifyTarget(), {
     instanceOf: SemanticReleaseError,
@@ -55,11 +58,11 @@ test('VSCE_TARGET is unsupported', async (t) => {
 });
 
 test('VSCE_TARGET is universal', async (t) => {
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     VSCE_TARGET: 'universal',
   });
 
-  const verifyTarget = require('../lib/verify-target');
+  const { verifyTarget } = await import('../lib/verify-target.js');
 
   await t.notThrowsAsync(() => verifyTarget());
 });

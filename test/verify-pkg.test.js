@@ -1,7 +1,10 @@
-const sinon = require('sinon');
-const test = require('ava');
-const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
+import avaTest from 'ava';
+import SemanticReleaseError from '@semantic-release/error';
+import { stub } from 'sinon';
+import esmock from 'esmock';
+
+// Run tests serially to avoid env pollution
+const test = avaTest.serial;
 
 const cwd = process.cwd();
 
@@ -9,12 +12,10 @@ test('package.json is found', async (t) => {
   const name = 'test';
   const publisher = 'tester';
 
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(true),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(true),
+      readJson: stub().resolves({
         name,
         publisher,
       }),
@@ -28,12 +29,10 @@ test('package.json is not found', async (t) => {
   const name = 'test';
   const publisher = 'tester';
 
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(false),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(false),
+      readJson: stub().resolves({
         name,
         publisher,
       }),
@@ -49,14 +48,12 @@ test('package.json is not found', async (t) => {
 test('package is valid', async (t) => {
   const name = 'test';
   const publisher = 'tester';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(true),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().returns({
-        publisher,
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(true),
+      readJson: stub().resolves({
         name,
+        publisher,
       }),
     },
   });
@@ -65,12 +62,10 @@ test('package is valid', async (t) => {
 });
 
 test('package is invalid', async (t) => {
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(true),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().rejects(),
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(true),
+      readJson: stub().rejects(),
     },
   });
 
@@ -82,12 +77,10 @@ test('package is invalid', async (t) => {
 
 test('package is missing name', async (t) => {
   const publisher = 'tester';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(true),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(true),
+      readJson: stub().resolves({
         publisher,
       }),
     },
@@ -101,12 +94,10 @@ test('package is missing name', async (t) => {
 
 test('package is missing publisher', async (t) => {
   const name = 'test';
-  const verifyPkg = proxyquire('../lib/verify-pkg', {
-    fs: {
-      existsSync: sinon.stub().returns(true),
-    },
-    'fs-extra': {
-      readJson: sinon.stub().returns({
+  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+    'fs-extra/esm': {
+      pathExists: stub().resolves(true),
+      readJson: stub().resolves({
         name,
       }),
     },

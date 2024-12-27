@@ -1,24 +1,28 @@
-const test = require('ava').serial;
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
-const SemanticReleaseError = require('@semantic-release/error');
+import avaTest from 'ava';
+import { fake, stub } from 'sinon';
+import esmock from 'esmock';
+import SemanticReleaseError from '@semantic-release/error';
+
+// Run tests serially to avoid env pollution
+const test = avaTest.serial;
 
 const cwd = process.cwd();
 
 test('OVSX_PAT is set', async (t) => {
   const logger = {
-    log: sinon.fake(),
+    log: fake(),
   };
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: 'abc123',
   });
 
-  const verifyOvsxAuth = proxyquire('../lib/verify-ovsx-auth', {
-    execa: sinon
-      .stub()
-      .withArgs('ovsx', ['verify-pat'], { preferLocal: true, cwd })
-      .resolves(),
+  const { verifyOvsxAuth } = await esmock('../lib/verify-ovsx-auth.js', {
+    execa: {
+      execa: stub()
+        .withArgs('ovsx', ['verify-pat'], { preferLocal: true, cwd })
+        .resolves(),
+    },
   });
 
   await t.notThrowsAsync(() => verifyOvsxAuth(logger));
@@ -27,14 +31,14 @@ test('OVSX_PAT is set', async (t) => {
 
 test('OVSX_PAT is invalid', async (t) => {
   const logger = {
-    log: sinon.fake(),
+    log: fake(),
   };
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: '',
   });
 
-  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
+  const { verifyOvsxAuth } = await import('../lib/verify-ovsx-auth.js');
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
@@ -44,14 +48,14 @@ test('OVSX_PAT is invalid', async (t) => {
 
 test('OVSX_PAT is invalid but not empty', async (t) => {
   const logger = {
-    log: sinon.fake(),
+    log: fake(),
   };
 
-  sinon.stub(process, 'env').value({
+  stub(process, 'env').value({
     OVSX_PAT: 'abc123',
   });
 
-  const verifyOvsxAuth = require('../lib/verify-ovsx-auth');
+  const { verifyOvsxAuth } = await import('../lib/verify-ovsx-auth.js');
 
   await t.throwsAsync(() => verifyOvsxAuth(logger), {
     instanceOf: SemanticReleaseError,
