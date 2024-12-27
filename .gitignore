@@ -59,6 +59,3 @@ typings/
 
 # Editor configs
 .vscode
-
-# Allow launch.json
-!.vscode/launch.json

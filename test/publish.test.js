@@ -18,7 +18,7 @@ test.afterEach((t) => {
   t.context.stubs.execaStub.resetHistory();
 });
 
-test('publish', async (t) => {
+test('publish to vs marketplace with VSCE_PAT', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
@@ -46,6 +46,72 @@ test('publish', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', version, '--no-git-tag-version'],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
+});
+
+test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=true', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  sinon.stub(process, 'env').value({
+    VSCE_AZURE_CREDENTIAL: 'true',
+  });
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  const args0 = execaStub.getCall(0).args;
+  t.deepEqual(args0, [
+    'vsce',
+    ['publish', '--packagePath', packagePath, '--azure-credential'],
+    { stdio: 'inherit', preferLocal: true, cwd },
+  ]);
+});
+
+test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=1', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  sinon.stub(process, 'env').value({
+    VSCE_AZURE_CREDENTIAL: '1',
+  });
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  const args0 = execaStub.getCall(0).args;
+  t.deepEqual(args0, [
+    'vsce',
+    ['publish', '--packagePath', packagePath, '--azure-credential'],
     { stdio: 'inherit', preferLocal: true, cwd },
   ]);
 });
@@ -194,39 +260,6 @@ test('publish to OpenVSX', async (t) => {
   ]);
 });
 
-test('publish to VSCE with azure credentials', async (t) => {
-  const { execaStub } = t.context.stubs;
-  const publisher = 'semantic-release-vsce';
-  const name = 'Semantice Release VSCE';
-  const publish = proxyquire('../lib/publish', {
-    execa: execaStub,
-    'fs-extra': {
-      readJson: sinon.stub().returns({
-        publisher,
-        name,
-      }),
-    },
-  });
-
-  const version = '1.0.0';
-  const packagePath = 'test.vsix';
-  sinon.stub(process, 'env').value({
-    VSCE_AZURE_CREDENTIAL: true,
-  });
-  const result = await publish(version, packagePath, logger, cwd);
-
-  t.deepEqual(result, {
-    name: 'Visual Studio Marketplace',
-    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
-  });
-  const args0 = execaStub.getCall(0).args;
-  t.deepEqual(args0, [
-    'vsce',
-    ['publish', '--packagePath', packagePath, '--azure-credential'],
-    { stdio: 'inherit', preferLocal: true, cwd },
-  ]);
-});
-
 test('publish to OpenVSX only', async (t) => {
   const { execaStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
@@ -278,6 +311,32 @@ test('should not publish when neither vsce nor ovsx personal access token is con
   const version = '1.0.0';
   const packagePath = 'test.vsix';
   sinon.stub(process, 'env').value({});
+
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.falsy(result);
+  t.true(execaStub.notCalled);
+});
+
+test('should not publish if no token and VSCE_AZURE_CREDENTIAL=false', async (t) => {
+  const { execaStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const publish = proxyquire('../lib/publish', {
+    execa: execaStub,
+    'fs-extra': {
+      readJson: sinon.stub().returns({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  sinon.stub(process, 'env').value({
+    VSCE_AZURE_CREDENTIAL: 'false',
+  });
 
   const result = await publish(version, packagePath, logger, cwd);
 
