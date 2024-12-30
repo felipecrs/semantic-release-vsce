@@ -214,7 +214,7 @@ jobs:
          'semantic-release-vsce',
          {
            packageVsix: true,
-           publish: false, // no-op since we use semantic-release-stop-before-publish
+           publish: false,
          },
        ],
        'semantic-release-stop-before-publish',
@@ -276,7 +276,7 @@ jobs:
             npm_config_arch: x64
           - os: windows-latest
             target: win32-arm64
-            npm_config_arch: arm
+            npm_config_arch: arm64
           - os: ubuntu-latest
             target: linux-x64
             npm_config_arch: x64
@@ -301,6 +301,12 @@ jobs:
           - os: ubuntu-latest
             target: universal
     runs-on: ${{ matrix.os }}
+    # Even though semantic-release will not publish anything, it still needs to
+    # validate the GITHUB_TOKEN
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -317,16 +323,20 @@ jobs:
       - run: npx semantic-release --extends ./package.release.config.js
         env:
           VSCE_TARGET: ${{ matrix.target }}
-          # All tokens are required since semantic-release needs to validate them
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # In case you want to publish to Visual Studio Marketplace
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          # In case you want to publish to Open VSX Registry
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: '*.vsix'
+      # vsce updates the version in package.json and package-lock.json during
+      # package step, so we need to save them for the publish step
+      - if: matrix.target == 'universal'
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-json
+          path: |
+            package.json
+            package-lock.json
 
   release:
     runs-on: ubuntu-latest
