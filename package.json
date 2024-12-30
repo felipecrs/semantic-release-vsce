@@ -20,7 +20,7 @@
     "vscode",
     "vsce"
   ],
-  "main": "index.js",
+  "exports": "./index.js",
   "files": [
     "lib/**/*.js"
   ],
