@@ -158,17 +158,26 @@ name: release
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+
+permissions:
+  contents: read # for checkout
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 22
       - run: npm ci
+      - run: npm audit signatures
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -228,13 +237,13 @@ jobs:
          'semantic-release-vsce',
          {
            packageVsix: false,
-           publishPackagePath: '*/*.vsix',
+           publishPackagePath: '*.vsix',
          },
        ],
        [
          '@semantic-release/github',
          {
-           assets: '*/*.vsix',
+           assets: '*.vsix',
          },
        ],
      ],
@@ -251,7 +260,11 @@ name: ci
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+
+permissions:
+  contents: read # for checkout
 
 jobs:
   build:
@@ -276,6 +289,9 @@ jobs:
           - os: ubuntu-latest
             target: alpine-x64
             npm_config_arch: x64
+          - os: ubuntu-latest
+            target: alpine-arm64
+            npm_config_arch: arm64
           - os: macos-latest
             target: darwin-x64
             npm_config_arch: x64
@@ -286,22 +302,18 @@ jobs:
             target: universal
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
-
+          node-version: 22
       - if: matrix.target != 'universal'
         name: Install dependencies (with binaries)
         run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_config_arch }}
-
       - if: matrix.target == 'universal'
         name: Install dependencies (without binaries)
         run: npm ci
-
       - run: npx semantic-release --extends ./package.release.config.js
         env:
           VSCE_TARGET: ${{ matrix.target }}
@@ -311,8 +323,7 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           # In case you want to publish to Open VSX Registry
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
-
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: '*.vsix'
@@ -320,17 +331,20 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: 16
-
+          merge-multiple: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - run: npm ci
-
-      - uses: actions/download-artifact@v3
-
+      - run: npm audit signatures
       - run: npx semantic-release --extends ./publish.release.config.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -347,26 +361,31 @@ name: release
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+
+permissions:
+  contents: read # for checkout
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - run: npm ci
-
-      # Log into Azure CLI to get VSCE credentials
-      - name: Azure login
-        uses: azure/login@v2
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm audit signatures
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -11,7 +11,7 @@ on:
       - next
 
 permissions:
-  contents: read
+  contents: read # for checkout
 
 jobs:
   test:
