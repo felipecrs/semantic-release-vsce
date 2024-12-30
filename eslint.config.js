@@ -1,7 +1,12 @@
 // @ts-check
 
-import neostandard from 'neostandard';
+import neostandard, { resolveIgnoresFromGitignore } from 'neostandard';
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 
-export default neostandard({
-  noStyle: true,
-});
+export default [
+  ...neostandard({
+    ignores: resolveIgnoresFromGitignore(),
+    noStyle: true,
+  }),
+  eslintPluginUnicorn.configs['flat/recommended'],
+];

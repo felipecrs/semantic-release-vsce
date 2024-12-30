@@ -1,6 +1,6 @@
 // @ts-check
 
-import { join } from 'node:path';
+import path from 'node:path';
 import { prepare as vscePrepare } from './lib/prepare.js';
 import { publish as vscePublish } from './lib/publish.js';
 import { verify as vsceVerify } from './lib/verify.js';
@@ -60,7 +60,7 @@ export async function publish(
 
   if (pluginConfig?.publishPackagePath) {
     // Expand glob
-    const glob = (await import('glob')).glob;
+    const { glob } = await import('glob');
     packagePath = await glob(pluginConfig.publishPackagePath, { cwd });
   }
 
@@ -68,5 +68,7 @@ export async function publish(
 }
 
 function getPackageRoot(pluginConfig, cwd) {
-  return pluginConfig.packageRoot ? join(cwd, pluginConfig.packageRoot) : cwd;
+  return pluginConfig.packageRoot
+    ? path.join(cwd, pluginConfig.packageRoot)
+    : cwd;
 }

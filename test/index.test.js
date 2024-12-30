@@ -1,6 +1,6 @@
 import avaTest from 'ava';
 import esmock from 'esmock';
-import { resolve } from 'path';
+import path from 'node:path';
 import { fake, stub } from 'sinon';
 
 // Run tests serially to avoid env pollution
@@ -29,9 +29,9 @@ test.beforeEach((t) => {
 });
 
 test.afterEach((t) => {
-  Object.keys(t.context.stubs).forEach((key) => {
+  for (const key of Object.keys(t.context.stubs)) {
     t.context.stubs[key].resetHistory();
-  });
+  }
 });
 
 test('verifyConditions', async (t) => {
@@ -305,7 +305,9 @@ test('publishes an extension in a non-root folder', async (t) => {
   const pluginConfig = {
     packageRoot: './vscode-extension',
   };
-  const resolvedCwd = resolve(`${semanticReleasePayload.cwd}/vscode-extension`);
+  const resolvedCwd = path.resolve(
+    `${semanticReleasePayload.cwd}/vscode-extension`,
+  );
 
   await publish(pluginConfig, semanticReleasePayload);
 
