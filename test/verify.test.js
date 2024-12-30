@@ -10,8 +10,8 @@ const cwd = process.cwd();
 
 test('resolves', async (t) => {
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stub().resolves(),
+    '../lib/verify-package.js': {
+      verifyPackage: stub().resolves(),
     },
     '../lib/verify-target.js': {
       verifyTarget: stub().resolves(),
@@ -33,8 +33,8 @@ test('resolves', async (t) => {
 
 test('rejects with verify-pkg', async (t) => {
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stub().rejects(),
+    '../lib/verify-package.js': {
+      verifyPackage: stub().rejects(),
     },
     '../lib/verify-target.js': {
       verifyTarget: stub().resolves(),
@@ -52,8 +52,8 @@ test('rejects with verify-pkg', async (t) => {
 
 test('rejects with verify-target', async (t) => {
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stub().resolves(),
+    '../lib/verify-package.js': {
+      verifyPackage: stub().resolves(),
     },
     '../lib/verify-target.js': {
       verifyTarget: stub().rejects(),
@@ -71,8 +71,8 @@ test('rejects with verify-target', async (t) => {
 
 test('rejects with verify-auth', async (t) => {
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stub().resolves(),
+    '../lib/verify-package.js': {
+      verifyPackage: stub().resolves(),
     },
     '../lib/verify-target.js': {
       verifyTarget: stub().resolves(),
@@ -90,8 +90,8 @@ test('rejects with verify-auth', async (t) => {
 
 test('rejects with verify-ovsx-auth', async (t) => {
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stub().resolves(),
+    '../lib/verify-package.js': {
+      verifyPackage: stub().resolves(),
     },
     '../lib/verify-target.js': {
       verifyTarget: stub().resolves(),
@@ -115,8 +115,8 @@ test('it does not verify the auth tokens if publishing is disabled', async (t) =
     verifyOvsxAuthStub: stub().resolves(),
   };
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stubs.verifyPkgStub,
+    '../lib/verify-package.js': {
+      verifyPackage: stubs.verifyPkgStub,
     },
     '../lib/verify-target.js': {
       verifyTarget: stubs.verifyTargetStub,
@@ -147,8 +147,8 @@ test('errors when neither vsce nor ovsx personal access token is configured', as
     },
   };
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stubs.verifyPkgStub,
+    '../lib/verify-package.js': {
+      verifyPackage: stubs.verifyPkgStub,
     },
     '../lib/verify-target.js': {
       verifyTarget: stubs.verifyTargetStub,
@@ -185,8 +185,8 @@ test('verify vsce only', async (t) => {
     },
   };
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stubs.verifyPkgStub,
+    '../lib/verify-package.js': {
+      verifyPackage: stubs.verifyPkgStub,
     },
     '../lib/verify-target.js': {
       verifyTarget: stubs.verifyTargetStub,
@@ -221,8 +221,8 @@ test('verify ovsx only', async (t) => {
     },
   };
   const { verify } = await esmock('../lib/verify.js', {
-    '../lib/verify-pkg.js': {
-      verifyPkg: stubs.verifyPkgStub,
+    '../lib/verify-package.js': {
+      verifyPackage: stubs.verifyPkgStub,
     },
     '../lib/verify-target.js': {
       verifyTarget: stubs.verifyTargetStub,

@@ -81,8 +81,8 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=true', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  const args0 = execaStub.getCall(0).args;
-  t.deepEqual(args0, [
+  const arguments0 = execaStub.getCall(0).args;
+  t.deepEqual(arguments0, [
     'vsce',
     ['publish', '--packagePath', packagePath, '--azure-credential'],
     { stdio: 'inherit', preferLocal: true, cwd },
@@ -116,8 +116,8 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=1', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  const args0 = execaStub.getCall(0).args;
-  t.deepEqual(args0, [
+  const arguments0 = execaStub.getCall(0).args;
+  t.deepEqual(arguments0, [
     'vsce',
     ['publish', '--packagePath', packagePath, '--azure-credential'],
     { stdio: 'inherit', preferLocal: true, cwd },

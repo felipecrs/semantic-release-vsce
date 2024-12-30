@@ -12,7 +12,7 @@ test('package.json is found', async (t) => {
   const name = 'test';
   const publisher = 'tester';
 
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(true),
       readJson: stub().resolves({
@@ -22,14 +22,14 @@ test('package.json is found', async (t) => {
     },
   });
 
-  await t.notThrowsAsync(() => verifyPkg(cwd));
+  await t.notThrowsAsync(() => verifyPackage(cwd));
 });
 
 test('package.json is not found', async (t) => {
   const name = 'test';
   const publisher = 'tester';
 
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(false),
       readJson: stub().resolves({
@@ -39,7 +39,7 @@ test('package.json is not found', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(cwd), {
+  await t.throwsAsync(() => verifyPackage(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPKG',
   });
@@ -48,7 +48,7 @@ test('package.json is not found', async (t) => {
 test('package is valid', async (t) => {
   const name = 'test';
   const publisher = 'tester';
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(true),
       readJson: stub().resolves({
@@ -58,18 +58,18 @@ test('package is valid', async (t) => {
     },
   });
 
-  await t.notThrowsAsync(() => verifyPkg(cwd));
+  await t.notThrowsAsync(() => verifyPackage(cwd));
 });
 
 test('package is invalid', async (t) => {
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(true),
       readJson: stub().rejects(),
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(cwd), {
+  await t.throwsAsync(() => verifyPackage(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'EINVALIDPKG',
   });
@@ -77,7 +77,7 @@ test('package is invalid', async (t) => {
 
 test('package is missing name', async (t) => {
   const publisher = 'tester';
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(true),
       readJson: stub().resolves({
@@ -86,7 +86,7 @@ test('package is missing name', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(cwd), {
+  await t.throwsAsync(() => verifyPackage(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPKGNAME',
   });
@@ -94,7 +94,7 @@ test('package is missing name', async (t) => {
 
 test('package is missing publisher', async (t) => {
   const name = 'test';
-  const { verifyPkg } = await esmock('../lib/verify-pkg.js', {
+  const { verifyPackage } = await esmock('../lib/verify-package.js', {
     'fs-extra/esm': {
       pathExists: stub().resolves(true),
       readJson: stub().resolves({
@@ -103,7 +103,7 @@ test('package is missing publisher', async (t) => {
     },
   });
 
-  await t.throwsAsync(() => verifyPkg(cwd), {
+  await t.throwsAsync(() => verifyPackage(cwd), {
     instanceOf: SemanticReleaseError,
     code: 'ENOPUBLISHER',
   });
