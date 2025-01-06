@@ -9,7 +9,12 @@
   "packageRules": [
     {
       "description": "Automerge non-major dev updates",
-      "matchDepTypes": ["devDependencies", "lockFileMaintenance", "volta", "action"],
+      "matchDepTypes": [
+        "devDependencies",
+        "lockFileMaintenance",
+        "volta",
+        "action"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
