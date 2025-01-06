@@ -24,6 +24,11 @@
       "semanticCommitScope": "deps-dev"
     },
     {
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "semanticCommitType": "build",
+      "semanticCommitScope": "deps-dev"
+    },
+    {
       "matchDepTypes": ["action"],
       "semanticCommitType": "ci"
     },
