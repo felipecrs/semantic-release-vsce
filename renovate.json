@@ -9,7 +9,12 @@
   "packageRules": [
     {
       "description": "Automerge non-major dev updates",
-      "matchDepTypes": ["devDependencies", "volta", "action"],
+      "matchDepTypes": [
+        "devDependencies",
+        "lockFileMaintenance",
+        "volta",
+        "action"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
@@ -20,6 +25,11 @@
     },
     {
       "matchDepTypes": ["devDependencies", "volta"],
+      "semanticCommitType": "build",
+      "semanticCommitScope": "deps-dev"
+    },
+    {
+      "matchUpdateTypes": ["lockFileMaintenance"],
       "semanticCommitType": "build",
       "semanticCommitScope": "deps-dev"
     },
