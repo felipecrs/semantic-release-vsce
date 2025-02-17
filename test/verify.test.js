@@ -22,7 +22,7 @@ test('resolves', async (t) => {
     '../lib/verify-ovsx-auth.js': {
       verifyOvsxAuth: stub().resolves(),
     },
-    '../lib/utils.js': {
+    '../lib/utilities.js': {
       isVscePublishEnabled: stub().returns(true),
       isOvsxPublishEnabled: stub().returns(true),
     },
@@ -141,7 +141,7 @@ test('errors when neither vsce nor ovsx personal access token is configured', as
     verifyTargetStub: stub().resolves(),
     verifyVsceAuthStub: stub().resolves(),
     verifyOvsxAuthStub: stub().resolves(),
-    utilsStub: {
+    utilitiesStub: {
       isVscePublishEnabled: stub().returns(false),
       isOvsxPublishEnabled: stub().returns(false),
     },
@@ -159,7 +159,7 @@ test('errors when neither vsce nor ovsx personal access token is configured', as
     '../lib/verify-ovsx-auth.js': {
       verifyOvsxAuth: stubs.verifyOvsxAuthStub,
     },
-    '../lib/utils.js': stubs.utilsStub,
+    '../lib/utilities.js': stubs.utilitiesStub,
   });
 
   await t.throwsAsync(() => verify({}, { logger, cwd }), {
@@ -176,7 +176,7 @@ test('verify vsce only', async (t) => {
     verifyTargetStub: stub().resolves(),
     verifyVsceAuthStub: stub().resolves(),
     verifyOvsxAuthStub: stub().resolves(),
-    utilsStub: {
+    utilitiesStub: {
       isVscePublishEnabled: stub().returns(true),
       isOvsxPublishEnabled: stub().returns(false),
     },
@@ -197,7 +197,7 @@ test('verify vsce only', async (t) => {
     '../lib/verify-ovsx-auth.js': {
       verifyOvsxAuth: stubs.verifyOvsxAuthStub,
     },
-    '../lib/utils.js': stubs.utilsStub,
+    '../lib/utilities.js': stubs.utilitiesStub,
   });
 
   await verify({}, { logger: stubs.logger, cwd });
@@ -212,7 +212,7 @@ test('verify ovsx only', async (t) => {
     verifyTargetStub: stub().resolves(),
     verifyVsceAuthStub: stub().resolves(),
     verifyOvsxAuthStub: stub().resolves(),
-    utilsStub: {
+    utilitiesStub: {
       isVscePublishEnabled: stub().returns(false),
       isOvsxPublishEnabled: stub().returns(true),
     },
@@ -233,7 +233,7 @@ test('verify ovsx only', async (t) => {
     '../lib/verify-ovsx-auth.js': {
       verifyOvsxAuth: stubs.verifyOvsxAuthStub,
     },
-    '../lib/utils.js': stubs.utilsStub,
+    '../lib/utilities.js': stubs.utilitiesStub,
   });
 
   await verify({}, { logger: stubs.logger, cwd });
