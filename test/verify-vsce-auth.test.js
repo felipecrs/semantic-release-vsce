@@ -2,6 +2,7 @@ import avaTest from 'ava';
 import { fake, stub } from 'sinon';
 import esmock from 'esmock';
 import SemanticReleaseError from '@semantic-release/error';
+import path from 'node:path';
 
 // Run tests serially to avoid env pollution
 const test = avaTest.serial;
@@ -9,6 +10,8 @@ const test = avaTest.serial;
 const logger = {
   log: fake(),
 };
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const localDir = path.resolve(import.meta.dirname, '../lib');
 const cwd = process.cwd();
 
 test('VSCE_PAT is set', async (t) => {
@@ -19,7 +22,7 @@ test('VSCE_PAT is set', async (t) => {
   const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .resolves(),
     },
   });
@@ -86,7 +89,7 @@ test('VSCE_PAT is valid', async (t) => {
   const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .resolves(),
     },
   });
@@ -103,7 +106,7 @@ test('VSCE_PAT is valid and VSCE_AZURE_CREDENTIAL=false', async (t) => {
   const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .resolves(),
     },
   });
@@ -136,7 +139,7 @@ test('VSCE_PAT is invalid but not empty', async (t) => {
   const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .rejects(),
     },
   });
@@ -156,7 +159,7 @@ test('Both VSCE_PAT and VSCE_AZURE_CREDENTIAL are set', async (t) => {
   const { verifyVsceAuth } = await esmock('../lib/verify-vsce-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('vsce', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('vsce', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .rejects(),
     },
   });

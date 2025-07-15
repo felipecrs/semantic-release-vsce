@@ -1,6 +1,7 @@
 import avaTest from 'ava';
 import { fake, stub } from 'sinon';
 import esmock from 'esmock';
+import path from 'node:path';
 import process from 'node:process';
 
 // Run tests serially to avoid env pollution
@@ -9,6 +10,8 @@ const test = avaTest.serial;
 const logger = {
   log: fake(),
 };
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const localDir = path.resolve(import.meta.dirname, '../lib');
 const cwd = process.cwd();
 
 test.beforeEach((t) => {
@@ -66,7 +69,12 @@ test('packageVsix is a string', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['package', version, '--no-git-tag-version', '--out', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    {
+      stdio: 'inherit',
+      preferLocal: true,
+      localDir,
+      cwd,
+    },
   ]);
 });
 
@@ -95,7 +103,7 @@ test('packageVsix is true', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['package', version, '--no-git-tag-version', '--out', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -128,7 +136,7 @@ test('packageVsix is not set but OVSX_PAT is', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['package', version, '--no-git-tag-version', '--out', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -171,7 +179,7 @@ test('packageVsix when target is set', async (t) => {
       '--target',
       target,
     ],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -203,6 +211,6 @@ test('packageVsix when target is set to universal', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['package', version, '--no-git-tag-version', '--out', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
