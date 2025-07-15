@@ -1,6 +1,7 @@
 import avaTest from 'ava';
 import { fake, stub } from 'sinon';
 import esmock from 'esmock';
+import path from 'node:path';
 
 // Run tests serially to avoid env pollution
 const test = avaTest.serial;
@@ -8,6 +9,8 @@ const test = avaTest.serial;
 const logger = {
   log: fake(),
 };
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const localDir = path.resolve(import.meta.dirname, '../lib');
 const cwd = process.cwd();
 
 test.beforeEach((t) => {
@@ -50,7 +53,7 @@ test('publish to vs marketplace with VSCE_PAT', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', version, '--no-git-tag-version'],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -85,7 +88,7 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=true', async (t) => {
   t.deepEqual(arguments0, [
     'vsce',
     ['publish', '--packagePath', packagePath, '--azure-credential'],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -120,7 +123,7 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=1', async (t) => {
   t.deepEqual(arguments0, [
     'vsce',
     ['publish', '--packagePath', packagePath, '--azure-credential'],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -155,7 +158,7 @@ test('publish with packagePath', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -190,7 +193,7 @@ test('publish with multiple packagePath', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', '--packagePath', ...packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -226,7 +229,7 @@ test('publish with target', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', version, '--no-git-tag-version', '--target', target],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -262,7 +265,7 @@ test('publish to OpenVSX', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'vsce',
     ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 
   // t.deepEqual(result[1], {
@@ -272,7 +275,7 @@ test('publish to OpenVSX', async (t) => {
   t.deepEqual(execaStub.getCall(1).args, [
     'ovsx',
     ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 
@@ -308,7 +311,7 @@ test('publish to OpenVSX only', async (t) => {
   t.deepEqual(execaStub.getCall(0).args, [
     'ovsx',
     ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, cwd },
+    { stdio: 'inherit', preferLocal: true, localDir, cwd },
   ]);
 });
 

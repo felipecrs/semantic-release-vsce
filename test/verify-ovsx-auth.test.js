@@ -2,10 +2,13 @@ import avaTest from 'ava';
 import { fake, stub } from 'sinon';
 import esmock from 'esmock';
 import SemanticReleaseError from '@semantic-release/error';
+import path from 'node:path';
 
 // Run tests serially to avoid env pollution
 const test = avaTest.serial;
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const localDir = path.resolve(import.meta.dirname, '../lib');
 const cwd = process.cwd();
 
 test('OVSX_PAT is set', async (t) => {
@@ -20,7 +23,7 @@ test('OVSX_PAT is set', async (t) => {
   const { verifyOvsxAuth } = await esmock('../lib/verify-ovsx-auth.js', {
     execa: {
       execa: stub()
-        .withArgs('ovsx', ['verify-pat'], { preferLocal: true, cwd })
+        .withArgs('ovsx', ['verify-pat'], { preferLocal: true, localDir, cwd })
         .resolves(),
     },
   });
