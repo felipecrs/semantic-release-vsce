@@ -24,7 +24,7 @@ jobs:
           - 22
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: volta-cli/action@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -43,7 +43,7 @@ jobs:
       id-token: write # to enable use of OIDC for npm provenance
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: volta-cli/action@v4
       - run: npm ci
       - run: npm audit signatures
