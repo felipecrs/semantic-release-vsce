@@ -15,21 +15,23 @@ const cwd = process.cwd();
 
 test.beforeEach((t) => {
   t.context.stubs = {
+    vscePublishStub: stub().resolves(),
     execaStub: stub(),
   };
 });
 
 test.afterEach((t) => {
+  t.context.stubs.vscePublishStub.resetHistory();
   t.context.stubs.execaStub.resetHistory();
 });
 
 test('publish to vs marketplace with VSCE_PAT', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -50,20 +52,19 @@ test('publish to vs marketplace with VSCE_PAT', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, [
-    'vsce',
-    ['publish', version, '--no-git-tag-version'],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, noGitTagVersion: true },
   ]);
 });
 
 test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=true', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -84,21 +85,19 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=true', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  const arguments0 = execaStub.getCall(0).args;
-  t.deepEqual(arguments0, [
-    'vsce',
-    ['publish', '--packagePath', packagePath, '--azure-credential'],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, packagePath: [packagePath], azureCredential: true },
   ]);
 });
 
 test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=1', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -119,21 +118,19 @@ test('publish to vs marketplace with VSCE_AZURE_CREDENTIAL=1', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  const arguments0 = execaStub.getCall(0).args;
-  t.deepEqual(arguments0, [
-    'vsce',
-    ['publish', '--packagePath', packagePath, '--azure-credential'],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, packagePath: [packagePath], azureCredential: true },
   ]);
 });
 
 test('publish with packagePath', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -155,20 +152,19 @@ test('publish with packagePath', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, [
-    'vsce',
-    ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, packagePath: [packagePath] },
   ]);
 });
 
 test('publish with multiple packagePath', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -190,20 +186,19 @@ test('publish with multiple packagePath', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, [
-    'vsce',
-    ['publish', '--packagePath', ...packagePath],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, packagePath },
   ]);
 });
 
 test('publish with target', async (t) => {
-  const { execaStub } = t.context.stubs;
+  // execa is not used in this test
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
-    execa: {
-      execa: execaStub,
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
     },
     'fs-extra/esm': {
       readJson: stub().resolves({
@@ -226,10 +221,9 @@ test('publish with target', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, [
-    'vsce',
-    ['publish', version, '--no-git-tag-version', '--target', target],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, noGitTagVersion: true, target },
   ]);
 });
 
@@ -238,6 +232,9 @@ test('publish to OpenVSX', async (t) => {
   const publisher = 'semantic-release-vsce';
   const name = 'Semantice Release VSCE';
   const { publish } = await esmock('../lib/publish.js', {
+    '@vscode/vsce/out/api.js': {
+      publish: t.context.stubs.vscePublishStub,
+    },
     execa: {
       execa: execaStub,
     },
@@ -262,17 +259,16 @@ test('publish to OpenVSX', async (t) => {
     name: 'Visual Studio Marketplace',
     url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
   });
-  t.deepEqual(execaStub.getCall(0).args, [
-    'vsce',
-    ['publish', '--packagePath', packagePath],
-    { stdio: 'inherit', preferLocal: true, localDir, cwd },
+  t.true(t.context.stubs.vscePublishStub.calledOnce);
+  t.deepEqual(t.context.stubs.vscePublishStub.getCall(0).args, [
+    { cwd, packagePath: [packagePath] },
   ]);
 
   // t.deepEqual(result[1], {
   //   name: 'Open VSX Registry',
   //   url: `https://open-vsx.org/extension/${publisher}/${name}/${version}`
   // });
-  t.deepEqual(execaStub.getCall(1).args, [
+  t.deepEqual(execaStub.getCall(0).args, [
     'ovsx',
     ['publish', '--packagePath', packagePath],
     { stdio: 'inherit', preferLocal: true, localDir, cwd },
