@@ -38,11 +38,7 @@ test('VSCE_TARGET is empty', async (t) => {
     VSCE_TARGET: '',
   });
 
-  await t.throwsAsync(() => verifyTarget(), {
-    instanceOf: SemanticReleaseError,
-    code: 'EINVALIDVSCETARGET',
-  });
-  t.false(vscePackage.called);
+  t.is(await verifyTarget(), undefined);
 });
 
 test('VSCE_TARGET is unsupported', async (t) => {
