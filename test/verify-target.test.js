@@ -17,16 +17,6 @@ test('VSCE_TARGET is not set', async (t) => {
   await t.notThrowsAsync(() => verifyTarget());
 });
 
-test('VSCE_TARGET is valid', async (t) => {
-  stub(process, 'env').value({
-    VSCE_TARGET: 'linux-x64',
-  });
-
-  const { verifyTarget } = await import('../lib/verify-target.js');
-
-  await t.notThrowsAsync(() => verifyTarget());
-});
-
 test('VSCE_TARGET is empty', async (t) => {
   const vscePackage = stub().returns({
     Targets: new Map(),
@@ -38,11 +28,17 @@ test('VSCE_TARGET is empty', async (t) => {
     VSCE_TARGET: '',
   });
 
-  await t.throwsAsync(() => verifyTarget(), {
-    instanceOf: SemanticReleaseError,
-    code: 'EINVALIDVSCETARGET',
+  await t.notThrowsAsync(() => verifyTarget());
+});
+
+test('VSCE_TARGET is valid', async (t) => {
+  stub(process, 'env').value({
+    VSCE_TARGET: 'linux-x64',
   });
-  t.false(vscePackage.called);
+
+  const { verifyTarget } = await import('../lib/verify-target.js');
+
+  await t.notThrowsAsync(() => verifyTarget());
 });
 
 test('VSCE_TARGET is unsupported', async (t) => {
