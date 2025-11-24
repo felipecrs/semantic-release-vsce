@@ -26,7 +26,7 @@
     "lib/**/*.js"
   ],
   "scripts": {
-    "lint": "prettier --check . && eslint . && installed-check --ignore-dev",
+    "lint": "prettier --check . && eslint . && installed-check --ignore-dev --ignore=semantic-release",
     "test": "c8 ava",
     "posttest": "npm run lint",
     "prepare": "husky"
