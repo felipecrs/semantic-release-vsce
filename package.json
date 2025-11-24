@@ -26,7 +26,7 @@
     "lib/**/*.js"
   ],
   "scripts": {
-    "lint": "prettier --check . && eslint . && installed-check --ignore-dev",
+    "lint": "prettier --check . && eslint . && installed-check --ignore-dev --ignore=semantic-release",
     "test": "c8 ava",
     "posttest": "npm run lint",
     "prepare": "husky"
@@ -73,7 +73,7 @@
     "lint-staged": "^16.0.0",
     "neostandard": "^0.12.0",
     "prettier": "^3.2.5",
-    "semantic-release": "^24.0.0",
+    "semantic-release": "^25.0.0",
     "sinon": "^21.0.0"
   },
   "lint-staged": {
