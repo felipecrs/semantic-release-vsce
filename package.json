@@ -48,7 +48,7 @@
   },
   "volta": {
     "node": "22.21.1",
-    "npm": "11.6.4"
+    "npm": "11.7.0"
   },
   "dependencies": {
     "@semantic-release/error": "^4.0.0",
