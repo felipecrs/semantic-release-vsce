@@ -62,7 +62,7 @@
     "semantic-release": ">=20"
   },
   "devDependencies": {
-    "ava": "^6.1.2",
+    "ava": "^7.0.0",
     "c8": "^11.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "eslint": "^9.12.0",
