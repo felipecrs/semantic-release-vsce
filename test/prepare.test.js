@@ -204,3 +204,37 @@ test('packageVsix when target is set to universal', async (t) => {
     gitTagVersion: false,
   });
 });
+
+test('packageVsix with VSCE_PRE_RELEASE enabled', async (t) => {
+  const { createVSIXStub } = t.context.stubs;
+  const name = 'test';
+
+  const { prepare } = await esmock('../lib/prepare.js', {
+    '@vscode/vsce': {
+      createVSIX: createVSIXStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = `${name}-${version}.vsix`;
+
+  stub(process, 'env').value({
+    VSCE_PRE_RELEASE: 'true',
+  });
+
+  const result = await prepare(version, true, logger, cwd);
+
+  t.deepEqual(result, packagePath);
+  t.deepEqual(createVSIXStub.getCall(0).args[0], {
+    cwd,
+    version,
+    packagePath,
+    gitTagVersion: false,
+    preRelease: true,
+  });
+});
