@@ -263,6 +263,89 @@ test('publish with target', async (t) => {
   t.true(ovsxPublishStub.notCalled);
 });
 
+test('publish with VSCE_PRE_RELEASE enabled and no packagePath', async (t) => {
+  const { vscePublishStub, ovsxPublishStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const { publish } = await esmock('../lib/publish.js', {
+    '@vscode/vsce': {
+      publish: vscePublishStub,
+    },
+    ovsx: {
+      publish: ovsxPublishStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const token = 'abc123';
+  stub(process, 'env').value({
+    VSCE_PAT: token,
+    VSCE_PRE_RELEASE: 'true',
+  });
+  const result = await publish(version, undefined, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  t.deepEqual(vscePublishStub.getCall(0).args[0], {
+    cwd,
+    pat: token,
+    azureCredential: false,
+    version,
+    gitTagVersion: false,
+    preRelease: true,
+  });
+  t.true(ovsxPublishStub.notCalled);
+});
+
+test('publish with VSCE_PRE_RELEASE enabled and packagePath', async (t) => {
+  const { vscePublishStub, ovsxPublishStub } = t.context.stubs;
+  const publisher = 'semantic-release-vsce';
+  const name = 'Semantice Release VSCE';
+  const { publish } = await esmock('../lib/publish.js', {
+    '@vscode/vsce': {
+      publish: vscePublishStub,
+    },
+    ovsx: {
+      publish: ovsxPublishStub,
+    },
+    'fs-extra/esm': {
+      readJson: stub().resolves({
+        publisher,
+        name,
+      }),
+    },
+  });
+
+  const version = '1.0.0';
+  const packagePath = 'test.vsix';
+  const token = 'abc123';
+  stub(process, 'env').value({
+    VSCE_PAT: token,
+    VSCE_PRE_RELEASE: 'true',
+  });
+  const result = await publish(version, packagePath, logger, cwd);
+
+  t.deepEqual(result, {
+    name: 'Visual Studio Marketplace',
+    url: `https://marketplace.visualstudio.com/items?itemName=${publisher}.${name}`,
+  });
+  t.deepEqual(vscePublishStub.getCall(0).args[0], {
+    cwd,
+    pat: token,
+    azureCredential: false,
+    packagePath: [packagePath],
+  });
+  t.true(ovsxPublishStub.notCalled);
+});
+
 test('publish to OpenVSX', async (t) => {
   const { vscePublishStub, ovsxPublishStub } = t.context.stubs;
   const publisher = 'semantic-release-vsce';
