@@ -67,6 +67,7 @@ test('packageVsix is a string', async (t) => {
     cwd,
     version,
     packagePath,
+    gitTagVersion: false,
   });
 });
 
@@ -96,6 +97,7 @@ test('packageVsix is true', async (t) => {
     cwd,
     version,
     packagePath,
+    gitTagVersion: false,
   });
 });
 
@@ -129,6 +131,7 @@ test('packageVsix is not set but OVSX_PAT is', async (t) => {
     cwd,
     version,
     packagePath,
+    gitTagVersion: false,
   });
 });
 
@@ -164,6 +167,7 @@ test('packageVsix when target is set', async (t) => {
     cwd,
     version,
     packagePath,
+    gitTagVersion: false,
     target,
   });
 });
@@ -197,5 +201,6 @@ test('packageVsix when target is set to universal', async (t) => {
     cwd,
     version,
     packagePath,
+    gitTagVersion: false,
   });
 });
