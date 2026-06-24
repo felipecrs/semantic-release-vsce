@@ -55,7 +55,7 @@
     "@vscode/vsce": "^3.0.0",
     "fs-extra": "^11.1.0",
     "glob": "^13.0.0",
-    "ovsx": "^0.10.0"
+    "ovsx": "^1.0.0"
   },
   "peerDependencies": {
     "semantic-release": ">=20"
