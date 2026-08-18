@@ -80,5 +80,8 @@
   },
   "publishConfig": {
     "provenance": true
+  },
+  "overrides": {
+    "undici": "7.29.0"
   }
 }
