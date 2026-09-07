@@ -46,10 +46,6 @@
       "lib/**/*.js"
     ]
   },
-  "volta": {
-    "node": "24.20.0",
-    "npm": "12.0.2"
-  },
   "dependencies": {
     "@semantic-release/error": "^4.0.0",
     "@vscode/vsce": "^3.0.0",
@@ -80,5 +76,9 @@
   },
   "publishConfig": {
     "provenance": true
+  },
+  "allowScripts": {
+    "keytar@7.9.0": true,
+    "@vscode/vsce-sign@2.0.9": true
   }
 }
