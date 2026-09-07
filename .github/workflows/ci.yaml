@@ -30,6 +30,8 @@ jobs:
         with:
           version: 2026.9.1
           install_args: 'node@${{ matrix.node-version }}'
+      - run: node --version
+      - run: npm --version
       - run: npm ci
       - run: npm test
 
@@ -49,8 +51,6 @@ jobs:
       - uses: jdx/mise-action@v4
         with:
           version: 2026.9.1
-      - run: node --version
-      - run: npm --version
       - run: npm ci
       - run: npm audit signatures
       - run: npx semantic-release
