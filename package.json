@@ -76,5 +76,9 @@
   },
   "publishConfig": {
     "provenance": true
+  },
+  "allowScripts": {
+    "keytar@7.9.0": true,
+    "@vscode/vsce-sign@2.0.9": true
   }
 }
