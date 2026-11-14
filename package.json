@@ -50,7 +50,7 @@
     "@semantic-release/error": "^4.0.0",
     "@vscode/vsce": "^3.0.0",
     "fs-extra": "^11.1.0",
-    "glob": "^13.0.0",
+    "glob": "^14.0.2",
     "ovsx": "^1.0.0"
   },
   "peerDependencies": {
